@@ -12,4 +12,6 @@ public interface UtilisateurRepository extends JpaRepository<Utilisateur, Long> 
     Optional<Utilisateur> findByEmail(String email);
 
     Utilisateur findByType(TypeUtilisateur administrateur);
+
+    Utilisateur findByNom(String username);
 }
