@@ -7,6 +7,7 @@ import javax.validation.constraints.NotBlank;
 
 @Entity
 @Table(name = "produit")
+
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(name = "type_produit")
 public abstract class Produit {
@@ -20,7 +21,7 @@ public abstract class Produit {
     private String nom;
 
     @NotBlank
-    @Column(name = "description_produit")
+    @Column(name = "déscription_produit")
     private String description;
 
     @DecimalMin("0.0")
@@ -31,23 +32,18 @@ public abstract class Produit {
     @Column(name = "quantite_stock_produit")
     private int quantiteStock;
 
-    @NotBlank
-    @Column(name = "image_produit")
-    private String image;
 
+    @Column(name = "image_produit", unique = false, nullable = false, length = 100000)
+    private byte[] image;
 
-    public Produit() {
-        super();
-    }
+    public Produit() {}
 
-    public Produit(String nom, String description, double prix, int quantiteStock, String image, TypeProduit typeProduit) {
-        super();
+    public Produit(String nom, String description, double prix, int quantiteStock, byte[] image) {
         this.nom = nom;
         this.description = description;
         this.prix = prix;
         this.quantiteStock = quantiteStock;
         this.image = image;
-
     }
 
     public Long getId() {
@@ -90,13 +86,11 @@ public abstract class Produit {
         this.quantiteStock = quantiteStock;
     }
 
-    public String getImage() {
+    public byte[] getImage() {
         return image;
     }
 
-    public void setImage(String image) {
+    public void setImage(byte[] image) {
         this.image = image;
     }
-
-
 }

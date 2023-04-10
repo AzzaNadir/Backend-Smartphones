@@ -1,7 +1,6 @@
 package com.example.model;
 
 import javax.persistence.*;
-
 @Entity
 @DiscriminatorValue("SMARTPHONE")
 @Table(name = "smartphone")
@@ -32,8 +31,8 @@ public class Smartphone extends Produit {
 
     }
 
-    public Smartphone(String modele, MarqueSmartphone marque, Couleur couleur, String stockage, String memoireRam, double tailleEcran) {
-        super();
+    public Smartphone(String nom, String description, double prix, int quantiteStock, byte[] image, String modele, MarqueSmartphone marque, Couleur couleur, String stockage, String memoireRam, double tailleEcran) {
+        super(nom, description, prix, quantiteStock, image);
         this.modele = modele;
         this.marque = marque;
         this.couleur = couleur;

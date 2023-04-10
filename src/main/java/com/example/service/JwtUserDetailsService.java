@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.Collection;
+
 //@Service
 //public class JwtUserDetailsService implements UserDetailsService {
 //
@@ -30,6 +31,7 @@ public class JwtUserDetailsService implements UserDetailsService {
 
     @Autowired
     private UtilisateurRepository userRepository;
+
 
     @Override
     public User loadUserByUsername(String username) throws UsernameNotFoundException {
