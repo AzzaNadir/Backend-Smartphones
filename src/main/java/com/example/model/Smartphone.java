@@ -40,7 +40,6 @@ public class Smartphone extends Produit {
         this.memoireRam = memoireRam;
         this.tailleEcran = tailleEcran;
     }
-
     public String getModele() {
         return modele;
     }
