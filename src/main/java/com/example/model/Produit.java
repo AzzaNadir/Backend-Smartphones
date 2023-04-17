@@ -21,7 +21,7 @@ public abstract class Produit {
     private String nom;
 
     @NotBlank
-    @Column(name = "déscription_produit")
+    @Column(name = "description_produit")
     private String description;
 
     @DecimalMin("0.0")

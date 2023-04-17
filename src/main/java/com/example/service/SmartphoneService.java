@@ -1,5 +1,7 @@
 package com.example.service;
 
+import com.example.model.Couleur;
+import com.example.model.MarqueSmartphone;
 import com.example.model.Produit;
 import com.example.model.Smartphone;
 import com.example.repository.ProduitRepository;
@@ -56,5 +58,9 @@ public class SmartphoneService {
         } else {
             throw new NoSuchElementException("Produit with ID " + smartphone.getId() + " does not exist.");
         }
+    }
+
+    public List<Produit> rechercherSmartphonesParCritere(String marque, String modele, String couleur, Double tailleEcran, String memoireRam, String stockage) {
+        return produitRepository.findSmartphonesByCriteria(marque, modele, couleur, tailleEcran, memoireRam, stockage);
     }
 }

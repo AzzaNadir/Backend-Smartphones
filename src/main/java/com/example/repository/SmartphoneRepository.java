@@ -1,5 +1,8 @@
 package com.example.repository;
 
-public interface SmartphoneRepository extends ProduitRepository{
+import com.example.model.Smartphone;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+public interface SmartphoneRepository extends JpaRepository<Smartphone, Long> {
 
 }

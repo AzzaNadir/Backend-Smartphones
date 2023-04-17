@@ -117,7 +117,16 @@ public class SmartphoneController {
     public List<Produit> getSmartphonePresentation() {
         return smartphoneService.SmartphonePresentation();
     }
-
+    @GetMapping("/SmartphonesFiltre")
+    public List<Produit> getSmartphonesByFilters(
+            @RequestParam(value = "marque", required = false) String marque,
+            @RequestParam(value = "modele", required = false) String modele,
+            @RequestParam(value = "couleur", required = false) String couleur,
+            @RequestParam(value = "stockage", required = false) String stockage,
+            @RequestParam(value = "memoireRam", required = false) String memoireRam,
+            @RequestParam(value = "tailleEcran", required = false) Double tailleEcran) {
+        return smartphoneService.rechercherSmartphonesParCritere(marque, modele, couleur, tailleEcran, memoireRam, stockage);
+    }
 }
 
 
