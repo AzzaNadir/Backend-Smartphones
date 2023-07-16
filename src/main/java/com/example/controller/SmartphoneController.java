@@ -17,7 +17,8 @@ import java.io.IOException;
 import java.util.List;
 
 @RestController
-@CrossOrigin
+@CrossOrigin(origins = "http://localhost:3000")
+
 public class SmartphoneController {
     @Autowired
     private ProduitService produitService;
@@ -127,6 +128,9 @@ public class SmartphoneController {
             @RequestParam(value = "tailleEcran", required = false) Double tailleEcran) {
         return smartphoneService.rechercherSmartphonesParCritere(marque, modele, couleur, tailleEcran, memoireRam, stockage);
     }
+
+
+
 }
 
 
