@@ -41,6 +41,6 @@ public class JwtUserDetailsService implements UserDetailsService {
         }
         Collection<GrantedAuthority> authorities = new ArrayList<>();
         authorities.add(new SimpleGrantedAuthority(user.getType().toString()));
-        return new User(user.getNom(), user.getMotDePasse(), authorities);
+        return new User(user.getEmail(), user.getMotDePasse(), authorities);
     }
 }
