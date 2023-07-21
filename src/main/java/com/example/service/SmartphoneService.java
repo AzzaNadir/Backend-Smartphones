@@ -63,6 +63,8 @@ public class SmartphoneService {
         return produitRepository.findSmartphonesByCriteria(marque, modele, couleur, tailleEcran, memoireRam, stockage);
     }
 
+
+
     //public List<Produit> rechercherSmartphonesParCritere(List<MarqueSmartphone> marques, String modele, Couleur couleur, Double tailleEcran, String memoireRam, String stockage) {
 //    return produitRepository.findSmartphonesByCriteria(marques, modele, couleur, tailleEcran, memoireRam, stockage);
 //}

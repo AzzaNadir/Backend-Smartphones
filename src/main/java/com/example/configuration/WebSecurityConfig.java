@@ -56,7 +56,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .cors().and() // enable CORS
                 // dont authenticate this particular request
 //                .cors().and().csrf().and()
-                .authorizeRequests().antMatchers("/authenticate", "/AfficherSmartphones", "/SmartphonesFiltre","/api/utilisateurs/register").permitAll().
+                .authorizeRequests().antMatchers("/authenticate", "/AfficherSmartphones", "/SmartphonesFiltre","/api/utilisateurs/register","/Smartphones/{id}").permitAll().
 
                 // all other requests need to be authenticated
 

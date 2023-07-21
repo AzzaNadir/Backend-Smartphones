@@ -25,4 +25,8 @@ public class ProduitService {
             throw new NoSuchElementException("Produit with ID " + id + " does not exist.");
         }
     }
+    public Optional<Produit> getSmartphoneById(Long id) {
+        return produitRepository.findById(id);
+
+    }
 }

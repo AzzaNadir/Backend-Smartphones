@@ -25,23 +25,47 @@ public class SmartphoneController {
     @Autowired
     private SmartphoneService smartphoneService;
 
-    @PostMapping("/AddSmartphones")
-    public ResponseEntity<Smartphone> addSmartphone(@RequestParam("nom") String nom,
-                                                    @RequestParam("description") String description,
-                                                    @RequestParam("prix") float prix,
-                                                    @RequestParam("quantiteStock") int quantiteStock,
-                                                    @RequestParam("image") MultipartFile file,
-                                                    @RequestParam("modele") String modele,
-                                                    @RequestParam("marque") String marque,
-                                                    @RequestParam("couleur") String couleur,
-                                                    @RequestParam("stockage") String stockage,
-                                                    @RequestParam("memoireRam") String memoireRam,
-                                                    @RequestParam("tailleEcran") double tailleEcran) throws IOException {
-        byte[] image = file.getBytes();
-        Smartphone smartphone = new Smartphone(nom, description, prix, quantiteStock, image, modele, MarqueSmartphone.valueOf(marque.toUpperCase()), Couleur.valueOf(couleur.toUpperCase()), stockage, memoireRam, tailleEcran);
-        smartphoneService.ajouterSmartphone(smartphone);
-        return new ResponseEntity<>(HttpStatus.CREATED);
+//    @PostMapping("/AddSmartphones")
+//    public ResponseEntity<Smartphone> addSmartphone(@RequestParam("nom") String nom,
+//                                                    @RequestParam("description") String description,
+//                                                    @RequestParam("prix") float prix,
+//                                                    @RequestParam("quantiteStock") int quantiteStock,
+//                                                    @RequestParam("image") MultipartFile file,
+//                                                    @RequestParam("modele") String modele,
+//                                                    @RequestParam("marque") String marque,
+//                                                    @RequestParam("couleur") String couleur,
+//                                                    @RequestParam("stockage") String stockage,
+//                                                    @RequestParam("memoireRam") String memoireRam,
+//                                                    @RequestParam("tailleEcran") double tailleEcran) throws IOException {
+//        byte[] image = file.getBytes();
+//        Smartphone smartphone = new Smartphone(nom, description, prix, quantiteStock, image, modele, MarqueSmartphone.valueOf(marque.toUpperCase()), Couleur.valueOf(couleur.toUpperCase()), stockage, memoireRam, tailleEcran);
+//        smartphoneService.ajouterSmartphone(smartphone);
+//        return new ResponseEntity<>(HttpStatus.CREATED);
+//    }
+@PostMapping("/AddSmartphones")
+public ResponseEntity<Smartphone> addSmartphone(@RequestParam("nom") String nom,
+                                                @RequestParam("description") String description,
+                                                @RequestParam("prix") float prix,
+                                                @RequestParam("quantiteStock") int quantiteStock,
+                                                @RequestParam("image") MultipartFile file,
+                                                @RequestParam("modele") String modele,
+                                                @RequestParam("marque") String marque,
+                                                @RequestParam("couleur") String couleur,
+                                                @RequestParam("stockage") String stockage,
+                                                @RequestParam("memoireRam") String memoireRam,
+                                                @RequestParam("tailleEcran") double tailleEcran) throws IOException {
+    byte[] image = file.getBytes();
+
+    List<Produit> existingSmartphones = smartphoneService.rechercherSmartphonesParCritere(marque, modele, couleur, tailleEcran, memoireRam, stockage);
+    if (!existingSmartphones.isEmpty()) {
+        // Un smartphone avec les mêmes attributs existe déjà, renvoyer une réponse d'erreur appropriée
+        return new ResponseEntity<>(HttpStatus.CONFLICT); // HTTP 409 - Conflict
     }
+
+    Smartphone smartphone = new Smartphone(nom, description, prix, quantiteStock, image, modele, MarqueSmartphone.valueOf(marque.toUpperCase()), Couleur.valueOf(couleur.toUpperCase()), stockage, memoireRam, tailleEcran);
+    smartphoneService.ajouterSmartphone(smartphone);
+    return new ResponseEntity<>(HttpStatus.CREATED);
+}
 
     @PostMapping("/AddSmartphones2")
     public ResponseEntity<Smartphone> addSmartphone(@ModelAttribute Smartphone smartreq, @RequestParam("image") MultipartFile file) throws IOException {
@@ -118,6 +142,17 @@ public class SmartphoneController {
     public List<Produit> getSmartphonePresentation() {
         return smartphoneService.SmartphonePresentation();
     }
+    @GetMapping("/Smartphones/{id}")
+    public ResponseEntity<Produit> getSmartphoneById(@PathVariable Long id) {
+        Produit produit = produitService.trouverProduitParId(id);
+        if (produit != null) {
+            return new ResponseEntity<>(produit, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
+
     @GetMapping("/SmartphonesFiltre")
     public List<Produit> getSmartphonesByFilters(
             @RequestParam(value = "marque", required = false) String marque,
