@@ -1,5 +1,7 @@
 package com.example.service;
 
+import com.example.model.Couleur;
+import com.example.model.MarqueSmartphone;
 import com.example.model.Produit;
 import com.example.model.Smartphone;
 import com.example.repository.ProduitRepository;
@@ -59,14 +61,21 @@ public class SmartphoneService {
         }
     }
 
-        public List<Produit> rechercherSmartphonesParCritere(String marque, String modele, String couleur, Double tailleEcran, String memoireRam, String stockage) {
+    public List<Produit> rechercherSmartphonesParCritere(String marque, String modele, String couleur, Double tailleEcran, String memoireRam, String stockage) {
         return produitRepository.findSmartphonesByCriteria(marque, modele, couleur, tailleEcran, memoireRam, stockage);
     }
 
 
+    public List<Produit> getAvailableColorsByMarqueAndModele(MarqueSmartphone marque, String modele) {
+        return produitRepository.findAvailableColorsByMarqueAndModele(marque, modele);
+    }
 
-    //public List<Produit> rechercherSmartphonesParCritere(List<MarqueSmartphone> marques, String modele, Couleur couleur, Double tailleEcran, String memoireRam, String stockage) {
-//    return produitRepository.findSmartphonesByCriteria(marques, modele, couleur, tailleEcran, memoireRam, stockage);
-//}
+    public List<Produit> getAvailableStoragesByMarqueAndModele(MarqueSmartphone marque, String modele) {
+        return produitRepository.findAvailableStoragesByMarqueAndModele(marque, modele);
+    }
+
+    public List<Produit> searchSmartphonesByOptions(MarqueSmartphone marque, String modele, Couleur couleur, String stockage) {
+        return produitRepository.findSmartphonesByCaracteristiques(marque, modele, couleur, stockage);
+    }
 
 }
