@@ -6,8 +6,8 @@ public class AvailableOptions {
     private List<Produit> couleur;
     private List<Produit> stockage;
 
-    public AvailableOptions(List<Produit> colors, List<Produit> stockage) {
-        this.couleur = colors;
+    public AvailableOptions(List<Produit> couleur, List<Produit> stockage) {
+        this.couleur = couleur;
         this.stockage = stockage;
     }
 
