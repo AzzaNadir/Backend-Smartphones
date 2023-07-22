@@ -30,7 +30,7 @@ public interface ProduitRepository extends JpaRepository<Produit, Long> {
     @Query("SELECT p FROM Produit p WHERE TYPE(p) = Smartphone AND  p.marque = :marque AND p.modele = :modele")
     List<Produit> findAvailableColorsByMarqueAndModele(@Param("marque") MarqueSmartphone marque, @Param("modele") String modele);
 
-    @Query("SELECT p FROM Produit p WHERE TYPE(p) = Smartphone AND p.marque = :marque AND p.modele = :modele AND (p.couleur = :couleur OR p.stockage = :stockage)")
+    @Query("SELECT p FROM Produit p WHERE TYPE(p) = Smartphone AND p.marque = :marque AND p.modele = :modele AND (p.couleur = :couleur AND p.stockage = :stockage)")
     List<Produit> findSmartphonesByCaracteristiques(@Param("marque") MarqueSmartphone marque,
                                                        @Param("modele") String modele,
                                                        @Param("couleur") Couleur couleur,
