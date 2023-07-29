@@ -1,13 +1,16 @@
 package com.example.controller;
 
-import com.example.model.Utilisateur;
 import com.example.model.Produit;
+import com.example.model.Utilisateur;
 import com.example.service.PanierService;
-import com.example.service.UtilisateurService;
 import com.example.service.ProduitService;
+import com.example.service.UtilisateurService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 public class PanierController {
@@ -34,8 +37,11 @@ public class PanierController {
         }
 
         // Appeler le service pour ajouter le produit au panier de l'utilisateur
-        panierService.ajouterProduitAuPanier(utilisateur, produit, quantite);
-
-        return ResponseEntity.ok("Produit ajouté au panier avec succès !");
+        try {
+            panierService.ajouterProduitAuPanier(utilisateur, produit, quantite);
+            return ResponseEntity.ok("Produit ajouté au panier avec succès !");
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("Le produit est déjà dans le panier !");
+        }
     }
 }
