@@ -8,6 +8,9 @@ import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.NoSuchElementException;
+import java.util.Optional;
+
 @Service
 public class UtilisateurService {
 
@@ -44,6 +47,16 @@ public class UtilisateurService {
 
         // Enregistrer l'utilisateur dans la base de données
         utilisateurRepository.save(user);
+    }
+
+
+    public Utilisateur getUtilisateurById(Long id) {
+        Optional<Utilisateur> optionalUtilisateur = utilisateurRepository.findById(id);
+        if (optionalUtilisateur.isPresent()) {
+            return optionalUtilisateur.get();
+        } else {
+            throw new NoSuchElementException("Utilisateur with ID " + id + " does not exist.");
+        }
     }
 }
 

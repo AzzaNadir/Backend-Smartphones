@@ -45,10 +45,8 @@ public class Utilisateur {
     @Column(name = "type_utilisateur")
     private TypeUtilisateur type;
 
-    // Définition de la relation d'association entre Utilisateur et Produit
-//    @OneToMany(mappedBy = "utilisateur")
-//    private List<Produit> produits = new ArrayList<>();
-
+    @OneToOne(mappedBy = "utilisateur")
+    private Panier panier;
 
     public Utilisateur() {
         super();
@@ -121,11 +119,11 @@ public class Utilisateur {
         this.type = type;
     }
 
-//    public List<Produit> getProduits() {
-//        return produits;
-//    }
+    public Panier getPanier() {
+        return panier;
+    }
 
-//    public void setProduits(List<Produit> produits) {
-//        this.produits = produits;
-//    }
+    public void setPanier(Panier panier) {
+        this.panier = panier;
+    }
 }
