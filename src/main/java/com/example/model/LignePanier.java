@@ -21,7 +21,8 @@ public class LignePanier {
     public void setPanier(Panier panier) {
         this.panier = panier;
     }
-
+    private double prixUnitaire;
+    private double prixTotal;
     public Long getId() {
         return id;
     }
@@ -48,5 +49,21 @@ public class LignePanier {
 
     public void setQuantite(int quantite) {
         this.quantite = quantite;
+    }
+
+    public double getPrixUnitaire() {
+        return prixUnitaire;
+    }
+
+    public void setPrixUnitaire(double prixUnitaire) {
+        this.prixUnitaire = prixUnitaire;
+    }
+
+    public double getPrixTotal() {
+        return prixTotal;
+    }
+
+    public void setPrixTotal(double prixTotal) {
+        this.prixTotal = prixTotal;
     }
 }

@@ -29,13 +29,27 @@ public class PanierService {
             }
         }
 
-        // Le produit n'existe pas dans le panier, ajoutez-le en tant que nouvelle ligne
         LignePanier nouvelleLigne = new LignePanier();
         nouvelleLigne.setProduit(produit);
         nouvelleLigne.setQuantite(quantite);
+
+        // Calculer le prix unitaire et le prix total pour cette ligne
+        double prixUnitaire = produit.getPrix(); // Vous pouvez obtenir le prix du produit à partir de son entité
+        double prixTotal = prixUnitaire * quantite;
+        nouvelleLigne.setPrixUnitaire(prixUnitaire);
+        nouvelleLigne.setPrixTotal(prixTotal);
+
         panier.ajouterLignePanier(nouvelleLigne);
+        miseAJourPrixTotalPanier(panier);
 
         // Enregistrez le panier uniquement, pas besoin de sauvegarder l'utilisateur ici
         panierRepository.save(panier);
+    }
+    private void miseAJourPrixTotalPanier(Panier panier) {
+        double prixTotalPanier = 0.0;
+        for (LignePanier lignePanier : panier.getLignesPanier()) {
+            prixTotalPanier += lignePanier.getPrixTotal();
+        }
+        panier.setPrixTotal(prixTotalPanier);
     }
 }
