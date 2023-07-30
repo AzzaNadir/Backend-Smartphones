@@ -58,6 +58,9 @@ public class UtilisateurService {
             throw new NoSuchElementException("Utilisateur with ID " + id + " does not exist.");
         }
     }
+    public Utilisateur getUtilisateurParEmail(String email) {
+        return utilisateurRepository.findByEmail(email);
+    }
 }
 
 
