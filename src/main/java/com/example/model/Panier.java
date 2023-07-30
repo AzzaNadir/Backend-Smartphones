@@ -19,7 +19,7 @@ public class Panier {
 
     @OneToMany(mappedBy = "panier", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<LignePanier> lignesPanier = new ArrayList<>();
-    private double prixTotal;
+    private double prixTotalPanier;
 
     public Long getId() {
         return id;
@@ -50,11 +50,11 @@ public class Panier {
         lignePanier.setPanier(this);
     }
 
-    public double getPrixTotal() {
-        return prixTotal;
+    public double getPrixTotalPanier() {
+        return prixTotalPanier;
     }
 
-    public void setPrixTotal(double prixTotal) {
-        this.prixTotal = prixTotal;
+    public void setPrixTotalPanier(double prixTotalPanier) {
+        this.prixTotalPanier = prixTotalPanier;
     }
 }

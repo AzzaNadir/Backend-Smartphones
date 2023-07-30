@@ -49,7 +49,7 @@ public class PanierService {
         for (LignePanier lignePanier : panier.getLignesPanier()) {
             prixTotalPanier += lignePanier.getPrixTotal();
         }
-        panier.setPrixTotal(prixTotalPanier);
+        panier.setPrixTotalPanier(prixTotalPanier);
     }
 
 }
