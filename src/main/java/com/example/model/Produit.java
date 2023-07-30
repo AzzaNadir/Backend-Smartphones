@@ -4,7 +4,7 @@ import javax.persistence.*;
 import javax.validation.constraints.DecimalMin;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
-
+import java.util.List;
 @Entity
 @Table(name = "produit")
 
@@ -35,7 +35,8 @@ public abstract class Produit {
 
     @Column(name = "image_produit", unique = false, nullable = false, length = 100000)
     private byte[] image;
-
+    @OneToMany(mappedBy = "produit", cascade = CascadeType.ALL)
+    private List<LignePanier> lignesPanier;
     public Produit() {}
 
     public Produit(String nom, String description, double prix, int quantiteStock, byte[] image) {
