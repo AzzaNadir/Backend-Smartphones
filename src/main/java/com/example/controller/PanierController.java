@@ -31,7 +31,6 @@ public class PanierController {
     private JwtTokenUtil jwtTokenUtil;
 
 
-
     //    @PostMapping("/ajouter-au-panier")
 //    public ResponseEntity<String> ajouterProduitAuPanier(@RequestParam Long utilisateurId,
 //                                                         @RequestParam Long produitId,
@@ -83,13 +82,33 @@ public class PanierController {
     }
 
 
+    //    @GetMapping("/panier")
+//    public ResponseEntity<Panier> afficherPanierUtilisateur(@RequestParam Long utilisateurId) {
+//        Utilisateur utilisateur = utilisateurService.getUtilisateurById(utilisateurId);
+//        if (utilisateur == null) {
+//            return ResponseEntity.notFound().build();
+//        }
+//
+//        Panier panier = utilisateur.getPanier();
+//        if (panier == null) {
+//            // Si l'utilisateur n'a pas encore de panier, vous pouvez retourner un panier vide ou une réponse appropriée
+//            // Ici, nous allons retourner un panier vide
+//            panier = new Panier();
+//        }
+//
+//        return ResponseEntity.ok(panier);
+//    }
     @GetMapping("/panier")
-    public ResponseEntity<Panier> afficherPanierUtilisateur(@RequestParam Long utilisateurId) {
-        Utilisateur utilisateur = utilisateurService.getUtilisateurById(utilisateurId);
+    public ResponseEntity<Panier> afficherPanierUtilisateur(HttpServletRequest request) {
+        // Récupérer l'adresse e-mail de l'utilisateur à partir du token
+        String token = request.getHeader("Authorization");
+        String emailUtilisateur = jwtTokenUtil.getUsernameFromToken(token.substring(7));
+
+        // Ensuite, utilisez le service ou le référentiel pour trouver l'utilisateur par adresse e-mail
+        Utilisateur utilisateur = utilisateurService.getUtilisateurParEmail(emailUtilisateur);
         if (utilisateur == null) {
             return ResponseEntity.notFound().build();
         }
-
         Panier panier = utilisateur.getPanier();
         if (panier == null) {
             // Si l'utilisateur n'a pas encore de panier, vous pouvez retourner un panier vide ou une réponse appropriée
@@ -99,5 +118,4 @@ public class PanierController {
 
         return ResponseEntity.ok(panier);
     }
-
 }
