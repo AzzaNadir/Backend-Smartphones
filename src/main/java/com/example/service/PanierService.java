@@ -7,7 +7,6 @@ import com.example.model.Utilisateur;
 import com.example.repository.PanierRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 @Service
 public class PanierService {
     @Autowired
@@ -52,4 +51,5 @@ public class PanierService {
         }
         panier.setPrixTotal(prixTotalPanier);
     }
+
 }

@@ -1,5 +1,7 @@
 package com.example.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
@@ -46,6 +48,7 @@ public class Utilisateur {
     private TypeUtilisateur type;
 
     @OneToOne(mappedBy = "utilisateur")
+    @JsonIgnore
     private Panier panier;
 
     public Utilisateur() {

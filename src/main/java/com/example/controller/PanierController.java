@@ -1,5 +1,6 @@
 package com.example.controller;
 
+import com.example.model.Panier;
 import com.example.model.Produit;
 import com.example.model.Utilisateur;
 import com.example.service.PanierService;
@@ -8,6 +9,7 @@ import com.example.service.UtilisateurService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -44,4 +46,22 @@ public class PanierController {
             return ResponseEntity.status(HttpStatus.CONFLICT).body("Le produit est déjà dans le panier !");
         }
     }
+
+    @GetMapping("/panier")
+    public ResponseEntity<Panier> afficherPanierUtilisateur(@RequestParam Long utilisateurId) {
+        Utilisateur utilisateur = utilisateurService.getUtilisateurById(utilisateurId);
+        if (utilisateur == null) {
+            return ResponseEntity.notFound().build();
+        }
+
+        Panier panier = utilisateur.getPanier();
+        if (panier == null) {
+            // Si l'utilisateur n'a pas encore de panier, vous pouvez retourner un panier vide ou une réponse appropriée
+            // Ici, nous allons retourner un panier vide
+            panier = new Panier();
+        }
+
+        return ResponseEntity.ok(panier);
+    }
+
 }
