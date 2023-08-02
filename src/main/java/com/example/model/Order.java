@@ -3,9 +3,11 @@ package com.example.model;
 import lombok.Data;
 
 import javax.persistence.*;
+import java.math.BigDecimal;
+import java.time.LocalDate;
 
 @Entity
-@Table(name = "orders")
+@Table(name = "paypal_orders")
 @Data
 public class Order {
     @Id
@@ -15,4 +17,8 @@ public class Order {
     private String paypalOrderId;
     @Column(name = "paypal_order_status")
     private String paypalOrderStatus;
+    @Column(name = "payment_date")
+    private LocalDate paymentDate;
+    @Column(name = "amount")
+    private BigDecimal amount;
 }

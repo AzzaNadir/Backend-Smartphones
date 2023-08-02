@@ -9,6 +9,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.util.List;
 
 @RestController
 @RequestMapping(value = "/checkout")
@@ -33,9 +36,19 @@ public class CheckoutController {
         orderDTO.setApplicationContext(appContext);
         var orderResponse = payPalHttpClient.createOrder(orderDTO);
 
+        List<PurchaseUnit> purchaseUnits = orderDTO.getPurchaseUnits();
+        BigDecimal totalAmount = BigDecimal.ZERO; // Initialiser le montant total à zéro
+
+        for (PurchaseUnit purchaseUnit : purchaseUnits) {
+            MoneyDTO money = purchaseUnit.getAmount();
+            BigDecimal purchaseAmount = new BigDecimal(money.getValue());
+            totalAmount = totalAmount.add(purchaseAmount); // Accumuler le montant total
+        }
+
         var entity = new Order();
         entity.setPaypalOrderId(orderResponse.getId());
         entity.setPaypalOrderStatus(orderResponse.getStatus().toString());
+        entity.setAmount(totalAmount);
         var out = orderDAO.save(entity);
         log.info("Saved order: {}", out);
         return ResponseEntity.ok(orderResponse);
@@ -46,6 +59,7 @@ public class CheckoutController {
         var orderId = request.getParameter("token");
         var out = orderDAO.findByPaypalOrderId(orderId);
         out.setPaypalOrderStatus(OrderStatus.APPROVED.toString());
+        out.setPaymentDate(LocalDate.now());
         orderDAO.save(out);
         return ResponseEntity.ok().body("Payment success");
     }
