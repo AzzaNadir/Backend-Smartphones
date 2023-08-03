@@ -65,4 +65,21 @@ public class PayPalHttpClient {
         return objectMapper.readValue(content, OrderResponseDTO.class);
 
     }
+    public OrderResponseDTO captureOrder(String orderId) throws Exception {
+        var accessTokenDto = getAccessToken();
+
+        var request = HttpRequest.newBuilder()
+                .uri(URI.create(createUrl(paypalConfig.getBaseUrl(),  ORDER_CAPTURE,orderId + "/capture")))
+                .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + accessTokenDto.getAccessToken())
+                .POST(HttpRequest.BodyPublishers.ofString(""))
+                .build();
+
+        var response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+        var content = response.body();
+        return objectMapper.readValue(content, OrderResponseDTO.class);
+
+    }
+
+
 }
