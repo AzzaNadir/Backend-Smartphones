@@ -95,14 +95,15 @@ public class CheckoutController {
     @GetMapping(value = "/success")
     public ResponseEntity<String> paymentSuccess(HttpServletRequest request) {
         var orderId = request.getParameter("token");
-        var out = orderDAO.findByPaypalOrderId(orderId);
-        out.setPaypalOrderStatus(OrderStatus.APPROVED.toString());
-        out.setPaymentDate(LocalDate.now());
-        orderDAO.save(out);
+
 
         // Déclencher le processus de capture du paiement.
         try {
             payPalHttpClient.captureOrder(orderId);
+            var out = orderDAO.findByPaypalOrderId(orderId);
+            out.setPaypalOrderStatus(OrderStatus.APPROVED.toString());
+            out.setPaymentDate(LocalDate.now());
+            orderDAO.save(out);
 
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Échec de la capture du paiement");
@@ -110,19 +111,5 @@ public class CheckoutController {
 
         return ResponseEntity.ok().body("Paiement réussi");
     }
-//    @PostMapping(value = "/capture/{orderId}")
-//    public ResponseEntity<String> capturePayment(@PathVariable String orderId) throws Exception {
-//        var orderCaptureResponse = payPalHttpClient.captureOrder(orderId);
-//
-//        if (orderCaptureResponse != null && "COMPLETED".equals(orderCaptureResponse.getStatus())) {
-//            // Mettez à jour votre base de données locale pour indiquer que le paiement est capturé avec succès.
-//            var out = orderDAO.findByPaypalOrderId(orderId);
-//            out.setPaypalOrderStatus(OrderStatus.COMPLETED.toString());
-//            out.setCaptureDate(LocalDate.now());
-//            orderDAO.save(out);
-//            return ResponseEntity.ok().body("Paiement capturé avec succès");
-//        } else {
-//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Échec de la capture du paiement");
-//        }
-//    }
+
 }
