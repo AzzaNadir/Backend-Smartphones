@@ -1,5 +1,6 @@
 package com.example.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 
 import javax.persistence.*;
@@ -15,6 +16,7 @@ public class LigneCommande {
 
     @ManyToOne
     @JoinColumn(name = "commande_id")
+    @JsonIgnore
     private Commande commande;
 
     @ManyToOne

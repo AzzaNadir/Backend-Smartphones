@@ -53,6 +53,7 @@ public class Utilisateur {
     @OneToOne(mappedBy = "utilisateur")
     @JsonIgnore
     private Panier panier;
+    @JsonIgnore
     @OneToMany(mappedBy = "utilisateur", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Commande> commandes = new ArrayList<>();
     @OneToMany(mappedBy = "utilisateur", cascade = CascadeType.ALL)
