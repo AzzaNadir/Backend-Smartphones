@@ -5,6 +5,8 @@ import javax.validation.constraints.DecimalMin;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import java.util.List;
+import java.util.ArrayList;
+
 @Entity
 @Table(name = "produit")
 
@@ -37,6 +39,9 @@ public abstract class Produit {
     private byte[] image;
     @OneToMany(mappedBy = "produit", cascade = CascadeType.ALL)
     private List<LignePanier> lignesPanier;
+
+    @OneToMany(mappedBy = "produit", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<LigneCommande> lignesCommande = new ArrayList<>();
     public Produit() {}
 
     public Produit(String nom, String description, double prix, int quantiteStock, byte[] image) {

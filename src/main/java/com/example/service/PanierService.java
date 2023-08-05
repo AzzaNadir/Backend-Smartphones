@@ -7,6 +7,7 @@ import com.example.model.Utilisateur;
 import com.example.repository.PanierRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 @Service
 public class PanierService {
     @Autowired
@@ -44,6 +45,7 @@ public class PanierService {
         // Enregistrez le panier uniquement, pas besoin de sauvegarder l'utilisateur ici
         panierRepository.save(panier);
     }
+
     private void miseAJourPrixTotalPanier(Panier panier) {
         double prixTotalPanier = 0.0;
         for (LignePanier lignePanier : panier.getLignesPanier()) {
@@ -52,4 +54,13 @@ public class PanierService {
         panier.setPrixTotalPanier(prixTotalPanier);
     }
 
+    public Panier findByUtilisateurId(Long utilisateurId) {
+        return panierRepository.findByUtilisateurId(utilisateurId);
+    }
+
+    public void clearPanier(Panier panier) {
+        panier.getLignesPanier().clear();
+        panier.setPrixTotalPanier(0.0);
+        panierRepository.save(panier);
+    }
 }

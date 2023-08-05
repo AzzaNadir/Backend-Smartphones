@@ -1,15 +1,18 @@
 package com.example.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.springframework.stereotype.Component;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-
+import java.util.List;
+import java.util.ArrayList;
 @Entity
 @Table(name = "utilisateur")
+@Component
 public class Utilisateur {
 
     @Id
@@ -50,7 +53,10 @@ public class Utilisateur {
     @OneToOne(mappedBy = "utilisateur")
     @JsonIgnore
     private Panier panier;
-
+    @OneToMany(mappedBy = "utilisateur", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Commande> commandes = new ArrayList<>();
+    @OneToMany(mappedBy = "utilisateur", cascade = CascadeType.ALL)
+    private List<Order> orders = new ArrayList<>();
     public Utilisateur() {
         super();
 
@@ -128,5 +134,21 @@ public class Utilisateur {
 
     public void setPanier(Panier panier) {
         this.panier = panier;
+    }
+
+    public List<Commande> getCommandes() {
+        return commandes;
+    }
+
+    public void setCommandes(List<Commande> commandes) {
+        this.commandes = commandes;
+    }
+
+    public List<Order> getOrders() {
+        return orders;
+    }
+
+    public void setOrders(List<Order> orders) {
+        this.orders = orders;
     }
 }

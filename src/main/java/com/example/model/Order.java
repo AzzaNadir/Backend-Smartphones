@@ -1,6 +1,7 @@
 package com.example.model;
 
 import lombok.Data;
+import org.springframework.stereotype.Component;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
@@ -9,6 +10,7 @@ import java.time.LocalDate;
 @Entity
 @Table(name = "paypal_orders")
 @Data
+@Component
 public class Order {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -21,4 +23,9 @@ public class Order {
     private LocalDate paymentDate;
     @Column(name = "amount")
     private BigDecimal amount;
+
+    @ManyToOne
+    @JoinColumn(name = "utilisateur_id")
+    private Utilisateur utilisateur;
+
 }

@@ -5,4 +5,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface PanierRepository extends JpaRepository<Panier, Long> {
 
+    Panier findByUtilisateurId(Long utilisateurId);
 }
