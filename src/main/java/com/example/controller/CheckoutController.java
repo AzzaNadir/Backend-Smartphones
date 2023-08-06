@@ -31,8 +31,6 @@ public class CheckoutController {
     @Autowired
     private CommandeService commandeService;
     @Autowired
-    private Utilisateur utilisateur;
-    @Autowired
     private JwtTokenUtil jwtTokenUtil;
     @Autowired
     private UtilisateurService utilisateurService;
