@@ -203,8 +203,10 @@ public class CheckoutController {
             Panier panier = utilisateur.getPanier();
 
             if (panier != null) {
+                List<LignePanier> lignesPanier = panier.getLignesPanier();
                 // Créer la commande à partir du panier et sauvegarder en base de données.
-                commandeService.createAndSaveCommande(panier);
+
+                commandeService.createAndSaveCommande(panier,lignesPanier);
 
                 // Nettoyer le panier après la création de la commande.
                 panierService.clearPanier(panier);

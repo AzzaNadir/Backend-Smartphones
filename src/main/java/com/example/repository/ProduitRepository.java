@@ -5,6 +5,7 @@ import com.example.model.MarqueSmartphone;
 import com.example.model.Produit;
 import com.example.model.Smartphone;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
@@ -32,10 +33,16 @@ public interface ProduitRepository extends JpaRepository<Produit, Long> {
 
     @Query("SELECT p FROM Produit p WHERE TYPE(p) = Smartphone AND p.marque = :marque AND p.modele = :modele AND (p.couleur = :couleur AND p.stockage = :stockage)")
     List<Produit> findSmartphonesByCaracteristiques(@Param("marque") MarqueSmartphone marque,
-                                                       @Param("modele") String modele,
-                                                       @Param("couleur") Couleur couleur,
-                                                       @Param("stockage") String stockage);
+                                                    @Param("modele") String modele,
+                                                    @Param("couleur") Couleur couleur,
+                                                    @Param("stockage") String stockage);
 
+
+    @Modifying
+    @Query("UPDATE Produit p SET p.quantiteStock = :quantiteStock WHERE p.id = :id")
+    void updateQuantiteStockById(Long id, int quantiteStock);
 }
+
+
 
 
