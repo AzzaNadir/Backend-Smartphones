@@ -47,8 +47,15 @@ public class CommandeService {
         Commande commande = new Commande();
         Utilisateur utilisateur = panier.getUtilisateur();
         commande.setUtilisateur(utilisateur);
-        commande.setDateCommande(utilisateur.getOrders().get(0).getPaymentDate());
-        commande.setTotalCommande(utilisateur.getOrders().get(0).getAmount());
+        if (!utilisateur.getOrders().isEmpty()) {
+            int lastIndex = utilisateur.getOrders().size() - 1;
+            commande.setTotalCommande(utilisateur.getOrders().get(lastIndex).getAmount());
+            commande.setDateCommande(utilisateur.getOrders().get(lastIndex).getPaymentDate());
+        } else {
+            // Gérer le cas où l'utilisateur n'a aucune commande.
+            // Vous pouvez lever une exception ou gérer le cas selon vos besoins.
+            throw new RuntimeException("Aucune commande pour l'utilisateur : " + utilisateur.getEmail());
+        }
 
         // Créer et associer les lignes de commande à la commande.
         for (LignePanier lignePanier : panier.getLignesPanier()) {
