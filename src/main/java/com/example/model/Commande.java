@@ -31,5 +31,4 @@ public class Commande {
     @Column(name = "date_commande")
     private LocalDate dateCommande;
 
-    // Ajoutez d'autres attributs et méthodes selon vos besoins
 }

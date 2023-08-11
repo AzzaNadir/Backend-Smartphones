@@ -46,7 +46,7 @@ public class PanierService {
         panierRepository.save(panier);
     }
 
-    private void miseAJourPrixTotalPanier(Panier panier) {
+    public void miseAJourPrixTotalPanier(Panier panier) {
         double prixTotalPanier = 0.0;
         for (LignePanier lignePanier : panier.getLignesPanier()) {
             prixTotalPanier += lignePanier.getPrixTotal();
@@ -61,6 +61,9 @@ public class PanierService {
     public void clearPanier(Panier panier) {
         panier.getLignesPanier().clear();
         panier.setPrixTotalPanier(0.0);
+        panierRepository.save(panier);
+    }
+    public void enregistrerPanier(Panier panier) {
         panierRepository.save(panier);
     }
 }

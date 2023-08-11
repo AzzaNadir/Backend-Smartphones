@@ -22,6 +22,6 @@ public class SmartphoneApplication implements CommandLineRunner {
 
 	@Override
 	public void run(String... args) throws Exception {
-		utilisateurService.creerAdmin("Admin", "Admin", "admin@votreentreprise.com", "admin", "123 rue de l'admin");
+		utilisateurService.creerAdmin("Admin", "Admin", "admin@hotmail.com", "admin", "123 rue de l'admin");
 	}
 }
