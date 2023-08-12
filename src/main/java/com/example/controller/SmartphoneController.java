@@ -4,6 +4,8 @@ import com.example.model.*;
 import com.example.service.ProduitService;
 import com.example.service.SmartphoneService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -114,9 +116,14 @@ public class SmartphoneController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
+//        @GetMapping("/AfficherSmartphones")
+//    public List<Produit> getSmartphonePresentation() {
+//        return smartphoneService.SmartphonePresentation();
+//    }
     @GetMapping("/AfficherSmartphones")
-    public List<Produit> getSmartphonePresentation() {
-        return smartphoneService.SmartphonePresentation();
+    public ResponseEntity<Page<Produit>> getSmartphonePresentation(Pageable pageable) {
+        Page<Produit> smartphones = smartphoneService.SmartphonePresentation(pageable);
+        return ResponseEntity.ok(smartphones);
     }
 
     @GetMapping("/Smartphones/{id}")
@@ -153,15 +160,28 @@ public class SmartphoneController {
     }
 
 
+//    @GetMapping("/SmartphonesFiltre")
+//    public List<Produit> getSmartphonesByFilters(
+//            @RequestParam(value = "marque", required = false) String marque,
+//            @RequestParam(value = "modele", required = false) String modele,
+//            @RequestParam(value = "couleur", required = false) String couleur,
+//            @RequestParam(value = "stockage", required = false) String stockage,
+//            @RequestParam(value = "memoireRam", required = false) String memoireRam,
+//            @RequestParam(value = "tailleEcran", required = false) Double tailleEcran) {
+//        return smartphoneService.rechercherSmartphonesParCritere(marque, modele, couleur, tailleEcran, memoireRam, stockage);
+//    }
+
     @GetMapping("/SmartphonesFiltre")
-    public List<Produit> getSmartphonesByFilters(
+    public ResponseEntity<Page<Produit>> getSmartphonesByFiltersAndPagination(
             @RequestParam(value = "marque", required = false) String marque,
             @RequestParam(value = "modele", required = false) String modele,
             @RequestParam(value = "couleur", required = false) String couleur,
             @RequestParam(value = "stockage", required = false) String stockage,
             @RequestParam(value = "memoireRam", required = false) String memoireRam,
-            @RequestParam(value = "tailleEcran", required = false) Double tailleEcran) {
-        return smartphoneService.rechercherSmartphonesParCritere(marque, modele, couleur, tailleEcran, memoireRam, stockage);
+            @RequestParam(value = "tailleEcran", required = false) Double tailleEcran,
+            Pageable pageable) {
+        Page<Produit> smartphones = smartphoneService.findSmartphonesParCritere(marque, modele, couleur, tailleEcran, memoireRam, stockage, pageable);
+        return ResponseEntity.ok(smartphones);
     }
 
     @GetMapping("/GetSmartphonesByCaracteristiques")

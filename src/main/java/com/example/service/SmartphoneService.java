@@ -7,6 +7,8 @@ import com.example.model.Smartphone;
 import com.example.repository.ProduitRepository;
 import com.example.repository.SmartphoneRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.CrossOrigin;
 
@@ -31,8 +33,11 @@ public class SmartphoneService {
         return produitRepository.findAll();
     }
 
-    public List<Produit> SmartphonePresentation() {
-        return produitRepository.SmartphonePresentation();
+//        public List<Produit> SmartphonePresentation() {
+//        return produitRepository.SmartphonePresentation();
+//    }
+    public Page<Produit> SmartphonePresentation(Pageable pageable) {
+        return produitRepository.findSmartphones(pageable);
     }
 
     public void mettreAJourSmartphone(Smartphone smartphone) {
@@ -65,6 +70,9 @@ public class SmartphoneService {
         return produitRepository.findSmartphonesByCriteria(marque, modele, couleur, tailleEcran, memoireRam, stockage);
     }
 
+    public Page<Produit> findSmartphonesParCritere(String marque, String modele, String couleur, Double tailleEcran, String memoireRam, String stockage, Pageable pageable) {
+        return produitRepository.findSmartphonesByCritere(marque, modele, couleur, tailleEcran, memoireRam, stockage, pageable);
+    }
 
     public List<Produit> getAvailableColorsByMarqueAndModele(MarqueSmartphone marque, String modele) {
         return produitRepository.findAvailableColorsByMarqueAndModele(marque, modele);
