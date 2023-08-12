@@ -117,5 +117,26 @@ public class PanierController {
         return ResponseEntity.ok("Article supprimé du panier avec succès");
     }
 
+    @DeleteMapping("/panier/vider")
+    public ResponseEntity<String> viderPanier(HttpServletRequest request) {
+        String token = request.getHeader("Authorization");
+        String emailUtilisateur = jwtTokenUtil.getUsernameFromToken(token.substring(7));
+
+        Utilisateur utilisateur = utilisateurService.getUtilisateurParEmail(emailUtilisateur);
+        if (utilisateur == null) {
+            return ResponseEntity.notFound().build();
+        }
+
+        Panier panier = utilisateur.getPanier();
+        if (panier == null) {
+            return ResponseEntity.notFound().build();
+        }
+
+        panier.getLignesPanier().clear();
+        panierService.miseAJourPrixTotalPanier(panier);
+        panierService.enregistrerPanier(panier);
+
+        return ResponseEntity.ok("Panier vidé avec succès");
+    }
 
 }
