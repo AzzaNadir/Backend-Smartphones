@@ -31,4 +31,6 @@ public class Commande {
     @Column(name = "date_commande")
     private LocalDate dateCommande;
 
+    @Column(name = "payment_status")
+    private String paymentStatus;
 }

@@ -51,6 +51,7 @@ public class CommandeService {
             int lastIndex = utilisateur.getOrders().size() - 1;
             commande.setTotalCommande(utilisateur.getOrders().get(lastIndex).getAmount());
             commande.setDateCommande(utilisateur.getOrders().get(lastIndex).getPaymentDate());
+            commande.setPaymentStatus(utilisateur.getOrders().get(lastIndex).getPaypalOrderStatus());
         } else {
             // Gérer le cas où l'utilisateur n'a aucune commande.
             // Vous pouvez lever une exception ou gérer le cas selon vos besoins.
