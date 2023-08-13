@@ -1,6 +1,8 @@
 package com.example.model;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import org.springframework.stereotype.Component;
 
 import javax.persistence.*;
@@ -8,11 +10,14 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-import java.util.List;
 import java.util.ArrayList;
+import java.util.List;
+
 @Entity
 @Table(name = "utilisateur")
 @Component
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
+
 public class Utilisateur {
 
     @Id
@@ -53,11 +58,11 @@ public class Utilisateur {
     @OneToOne(mappedBy = "utilisateur")
     @JsonIgnore
     private Panier panier;
-    @JsonIgnore
     @OneToMany(mappedBy = "utilisateur", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Commande> commandes = new ArrayList<>();
     @OneToMany(mappedBy = "utilisateur", cascade = CascadeType.ALL)
     private List<Order> orders = new ArrayList<>();
+
     public Utilisateur() {
         super();
 

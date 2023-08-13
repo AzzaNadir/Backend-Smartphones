@@ -3,6 +3,7 @@ package com.example.controller;
 import com.example.configuration.JwtTokenUtil;
 import com.example.model.Commande;
 import com.example.model.Utilisateur;
+import com.example.repository.CommandeRepository;
 import com.example.service.UtilisateurService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -20,6 +21,8 @@ public class CommandeControlleur {
     private UtilisateurService utilisateurService;
     @Autowired
     private JwtTokenUtil jwtTokenUtil;
+    @Autowired
+    private CommandeRepository commandeRepository;
     @GetMapping("/commande")
     public ResponseEntity<List<Commande>>afficherCommandeUtilisateur(HttpServletRequest request) {
         // Récupérer l'adresse e-mail de l'utilisateur à partir du token
@@ -36,5 +39,9 @@ public class CommandeControlleur {
         return ResponseEntity.ok(commande);
     }
 
-
+    @GetMapping("/commande/all")
+    public ResponseEntity<List<Commande>> afficherToutesLesCommandes() {
+        List<Commande> commandes = commandeRepository.findAll();
+        return ResponseEntity.ok(commandes);
+    }
 }
