@@ -49,7 +49,6 @@ public class CommandeService {
         commande.setUtilisateur(utilisateur);
         if (!utilisateur.getOrders().isEmpty()) {
             int lastIndex = utilisateur.getOrders().size() - 1;
-            commande.setTotalCommande(utilisateur.getOrders().get(lastIndex).getAmount());
             commande.setDateCommande(utilisateur.getOrders().get(lastIndex).getPaymentDate());
             commande.setPaymentStatus(utilisateur.getOrders().get(lastIndex).getPaypalOrderStatus());
         } else {
