@@ -50,10 +50,11 @@ public class CommandeService {
         if (!utilisateur.getOrders().isEmpty()) {
             int lastIndex = utilisateur.getOrders().size() - 1;
             commande.setDateCommande(utilisateur.getOrders().get(lastIndex).getPaymentDate());
-            commande.setPaymentStatus(utilisateur.getOrders().get(lastIndex).getPaypalOrderStatus());
+            commande.setCommandeStatus("Accepter");
         } else {
             // Gérer le cas où l'utilisateur n'a aucune commande.
             // Vous pouvez lever une exception ou gérer le cas selon vos besoins.
+            commande.setCommandeStatus("Refuser");
             throw new RuntimeException("Aucune commande pour l'utilisateur : " + utilisateur.getEmail());
         }
 
