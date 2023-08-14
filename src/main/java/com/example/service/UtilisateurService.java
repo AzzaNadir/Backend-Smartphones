@@ -19,7 +19,7 @@ public class UtilisateurService {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-    public Utilisateur creerAdmin(String nom, String prenom, String email, String motDePasse, String adresse) {
+    public Utilisateur creerAdmin(String nom, String prenom, String email, String motDePasse, String adresse,String numeroDeTelephone) {
         Utilisateur admin = utilisateurRepository.findByType(TypeUtilisateur.ADMINISTRATEUR);
         if (admin == null) {
             admin = new Utilisateur();
@@ -29,6 +29,7 @@ public class UtilisateurService {
             String motDePasseEncode = passwordEncoder.encode(motDePasse);
             admin.setMotDePasse(motDePasseEncode);
             admin.setAdresse(adresse);
+            admin.setNumeroDeTelephone(numeroDeTelephone);
             admin.setType(TypeUtilisateur.ADMINISTRATEUR);
             utilisateurRepository.save(admin);
         }

@@ -44,7 +44,9 @@ public class Utilisateur {
     @NotBlank
     @Column(name = "mot_de_passe_utilisateur")
     private String motDePasse;
-
+    @NotBlank
+    @Column(name = "numero_telephone_utilisateur")
+    private String numeroDeTelephone;
     @NotBlank
     @Size(max = 100)
     @Column(name = "adresse_utilisateur")
@@ -68,7 +70,7 @@ public class Utilisateur {
 
     }
 
-    public Utilisateur(String nom, String prenom, String email, String motDePasse, String adresse, TypeUtilisateur type) {
+    public Utilisateur(String nom, String prenom, String email, String motDePasse, String adresse, TypeUtilisateur type, String numeroDeTelephone) {
         super();
         this.nom = nom;
         this.prenom = prenom;
@@ -76,6 +78,7 @@ public class Utilisateur {
         this.motDePasse = motDePasse;
         this.adresse = adresse;
         this.type = type;
+        this.numeroDeTelephone = numeroDeTelephone;
     }
 
     public Long getId() {
@@ -156,5 +159,13 @@ public class Utilisateur {
 
     public void setOrders(List<Order> orders) {
         this.orders = orders;
+    }
+
+    public String getNumeroDeTelephone() {
+        return numeroDeTelephone;
+    }
+
+    public void setNumeroDeTelephone(String numeroDeTelephone) {
+        this.numeroDeTelephone = numeroDeTelephone;
     }
 }
