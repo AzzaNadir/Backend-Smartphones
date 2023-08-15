@@ -50,7 +50,7 @@ public class CommandeService {
         if (!utilisateur.getOrders().isEmpty()) {
             int lastIndex = utilisateur.getOrders().size() - 1;
             commande.setDateCommande(utilisateur.getOrders().get(lastIndex).getPaymentDate());
-            commande.setCommandeStatus("Accepter");
+            commande.setCommandeStatus("En cours de livraison");
         } else {
             // Gérer le cas où l'utilisateur n'a aucune commande.
             // Vous pouvez lever une exception ou gérer le cas selon vos besoins.

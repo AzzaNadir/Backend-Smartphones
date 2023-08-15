@@ -21,6 +21,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @RestController
@@ -187,6 +188,9 @@ public class CheckoutController {
             totalAmountWithTax = order.getAmount();
             statusPayment= order.getPaypalOrderStatus();
         }
+        if (statusPayment=="APPROVED"){
+            statusPayment= "Payé";
+        }
         // Calculer la TVA en supposant un taux de TVA de 20% (à adapter selon votre taux réel).
         BigDecimal taxRate = new BigDecimal("0.21"); // Exemple pour 20% de TVA
         BigDecimal taxAmount = totalAmountWithTax.multiply(taxRate);
@@ -194,6 +198,7 @@ public class CheckoutController {
         BigDecimal totalAmount = totalAmountWithTax.subtract(taxAmount);
 
         DecimalFormat decimalFormat = new DecimalFormat("#.##"); // Format pour les montants
+        DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
         StringBuilder emailContentBuilder = new StringBuilder();
         emailContentBuilder.append("<html><body>")
@@ -203,14 +208,14 @@ public class CheckoutController {
                 .append("<p>TVA : " + decimalFormat.format(taxAmount) + " €</p>")
                 .append("<p>Total : " + decimalFormat.format(totalAmountWithTax) + " €</p>");
         // Ajouter les informations de l'utilisateur
-        emailContentBuilder.append("<h3>Informations de l'utilisateur :</h3>")
+        emailContentBuilder.append("<h3>Informations de livraison :</h3>")
                 .append("<p>Nom : " + utilisateur.getNom() + "</p>")
                 .append("<p>Prénom : " + utilisateur.getPrenom() + "</p>")
                 .append("<p>Adresse de livraison : " + utilisateur.getAdresse() + "</p>")
                 .append("<p>Numéro de téléphone : " + utilisateur.getNumeroDeTelephone() + "</p>");
         // Ajouter les détails de la commande et les lignes de commande
         emailContentBuilder.append("<h3>Détails de la commande :</h3>")
-                .append("<p>Date de commande : " + commande.getDateCommande() + "</p>")
+                .append("<p>Date de commande : " + commande.getDateCommande().format(dateFormatter) + "</p>")
                 .append("<p>Statut de la commande : " + commande.getCommandeStatus() + "</p>")
                 .append("<p>Statut du payment : " +  statusPayment+ "</p>");
 
