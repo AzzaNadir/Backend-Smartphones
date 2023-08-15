@@ -168,7 +168,7 @@ public class PanierController {
         int quantiteEnStock = produit.getQuantiteStock(); // Remplacez ceci par la façon d'obtenir la quantité en stock du produit
 
         if (nouvelleQuantite > quantiteEnStock) {
-            return ResponseEntity.badRequest().body("Pas assez de quantité en stock.");
+            return ResponseEntity.badRequest().body("Quantité en stock insuffisante");
         }
 
         if (nouvelleQuantite <= 0) {
