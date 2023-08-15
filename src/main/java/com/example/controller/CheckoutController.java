@@ -225,7 +225,7 @@ public class CheckoutController {
             Produit produit = ligneCommande.getProduit();
             if (produit instanceof Smartphone) {
                 Smartphone smartphone = (Smartphone) produit;
-                emailContentBuilder.append("<li>Produit : " + smartphone.getMarque() + " " + smartphone.getModele() + " " + smartphone.getCouleur() + " " + smartphone.getStockage() + " " + smartphone.getMemoireRam() + "</li>")
+                emailContentBuilder.append("<li>Produit : " + smartphone.getMarque() + " " + smartphone.getModele() + " " + smartphone.getCouleur() + " " + smartphone.getTailleEcran()+"\""+ " " +smartphone.getStockage() + " " + smartphone.getMemoireRam() + "</li>")
                         .append("<li>Quantité : " + ligneCommande.getQuantite() + "</li>")
                         .append("<li>Prix unitaire : " + ligneCommande.getPrixUnitaire() + " € TVAC</li>")
                         .append("<li>Total : " + ligneCommande.getTotalLigne() + " € TVAC</li><br>");
