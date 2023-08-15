@@ -138,8 +138,9 @@ public class PanierController {
 
         return ResponseEntity.ok("Panier vidé avec succès");
     }
+
     @PutMapping("/article/{ligneId}")
-    public ResponseEntity<String> modifierQuantiteLigne(HttpServletRequest request ,@PathVariable Long ligneId, @RequestParam ("nouvelleQuantite") int nouvelleQuantite ){
+    public ResponseEntity<String> modifierQuantiteLigne(HttpServletRequest request, @PathVariable Long ligneId, @RequestParam("nouvelleQuantite") int nouvelleQuantite) {
         String token = request.getHeader("Authorization");
         String emailUtilisateur = jwtTokenUtil.getUsernameFromToken(token.substring(7));
         Utilisateur utilisateur = utilisateurService.getUtilisateurParEmail(emailUtilisateur);
@@ -159,13 +160,23 @@ public class PanierController {
                 .findFirst()
                 .orElse(null);
 
+        if (lignePanier == null) {
+            return ResponseEntity.notFound().build();
+        }
+
+        Produit produit = lignePanier.getProduit();
+        int quantiteEnStock = produit.getQuantiteStock(); // Remplacez ceci par la façon d'obtenir la quantité en stock du produit
+
+        if (nouvelleQuantite > quantiteEnStock) {
+            return ResponseEntity.badRequest().body("Pas assez de quantité en stock.");
+        }
+
         if (nouvelleQuantite <= 0) {
             // Supprimez la ligne de panier si la quantité est mise à zéro
             panier.getLignesPanier().remove(lignePanier);
         } else {
             lignePanier.setQuantite(nouvelleQuantite);
         }
-        Produit produit = lignePanier.getProduit();
         double prixUnitaire = produit.getPrix();
         int quantite = lignePanier.getQuantite();
         double prixTotal = prixUnitaire * quantite;
