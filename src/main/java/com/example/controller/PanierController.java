@@ -138,5 +138,44 @@ public class PanierController {
 
         return ResponseEntity.ok("Panier vidé avec succès");
     }
+    @PutMapping("/article/{ligneId}")
+    public ResponseEntity<String> modifierQuantiteLigne(HttpServletRequest request ,@PathVariable Long ligneId, @RequestParam ("nouvelleQuantite") int nouvelleQuantite ){
+        String token = request.getHeader("Authorization");
+        String emailUtilisateur = jwtTokenUtil.getUsernameFromToken(token.substring(7));
+        Utilisateur utilisateur = utilisateurService.getUtilisateurParEmail(emailUtilisateur);
+        if (utilisateur == null) {
+            return ResponseEntity.notFound().build();
+        }
+
+        Panier panier = utilisateur.getPanier();
+        if (panier == null) {
+            return ResponseEntity.notFound().build();
+        }
+
+        List<LignePanier> lignesPanier = panier.getLignesPanier();
+
+        LignePanier lignePanier = lignesPanier.stream()
+                .filter(ligne -> ligne.getId().equals(ligneId))
+                .findFirst()
+                .orElse(null);
+
+        if (nouvelleQuantite <= 0) {
+            // Supprimez la ligne de panier si la quantité est mise à zéro
+            panier.getLignesPanier().remove(lignePanier);
+        } else {
+            lignePanier.setQuantite(nouvelleQuantite);
+        }
+        Produit produit = lignePanier.getProduit();
+        double prixUnitaire = produit.getPrix();
+        int quantite = lignePanier.getQuantite();
+        double prixTotal = prixUnitaire * quantite;
+        lignePanier.setPrixTotal(prixTotal);
+
+        panierService.miseAJourPrixTotalPanier(panier);
+        panierService.enregistrerPanier(panier);
+
+        return ResponseEntity.ok("Quantité de la ligne de panier modifiée avec succès");
+
+    }
 
 }
