@@ -24,8 +24,8 @@ public interface ProduitRepository extends JpaRepository<Produit, Long> {
     Page<Produit> findSmartphones(Pageable pageable);
 
 
-    @Query("SELECT p FROM Produit p WHERE TYPE(p) = Smartphone AND p.marque = IFNULL(:marque, p.marque) AND p.modele = IFNULL(:modele, p.modele) AND p.couleur = IFNULL(:couleur, p.couleur) AND p.tailleEcran = IFNULL(:tailleEcran, p.tailleEcran) AND p.memoireRam = IFNULL(:memoireRam, p.memoireRam) AND p.stockage = IFNULL(:stockage, p.stockage)\n")
-    public List<Produit> findSmartphonesByCriteria(@Param("marque") String marque, @Param("modele") String modele, @Param("couleur") String couleur, @Param("tailleEcran") Double tailleEcran, @Param("memoireRam") String memoireRam, @Param("stockage") String stockage);
+    @Query("SELECT p FROM Produit p WHERE TYPE(p) = Smartphone AND p.marque = IFNULL(:marque, p.marque) AND p.modele = IFNULL(:modele, p.modele) AND p.couleur = IFNULL(:couleur, p.couleur) AND p.stockage = IFNULL(:stockage, p.stockage)\n")
+    public List<Produit> findSmartphonesByCriteria(@Param("marque") String marque, @Param("modele") String modele, @Param("couleur") String couleur, @Param("stockage") String stockage);
 
     @Query("SELECT p FROM Produit p WHERE TYPE(p) = Smartphone AND p.marque = IFNULL(:marque, p.marque) AND p.modele = IFNULL(:modele, p.modele) AND p.couleur = IFNULL(:couleur, p.couleur) AND p.tailleEcran = IFNULL(:tailleEcran, p.tailleEcran) AND p.memoireRam = IFNULL(:memoireRam, p.memoireRam) AND p.stockage = IFNULL(:stockage, p.stockage)")
     Page<Produit> findSmartphonesByCritere(
