@@ -11,6 +11,7 @@ import com.example.service.UtilisateurService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -31,6 +32,7 @@ public class PanierController {
     @Autowired
     private JwtTokenUtil jwtTokenUtil;
 
+    @PreAuthorize("hasAuthority('CLIENT')")
     @PostMapping("/ajouter-au-panier")
     public ResponseEntity<String> ajouterProduitAuPanier(HttpServletRequest request,
                                                          @RequestParam Long produitId,
@@ -59,7 +61,7 @@ public class PanierController {
             return ResponseEntity.status(HttpStatus.CONFLICT).body("Le produit est déjà dans le panier !");
         }
     }
-
+    @PreAuthorize("hasAuthority('CLIENT')")
     @GetMapping("/panier")
     public ResponseEntity<Panier> afficherPanierUtilisateur(HttpServletRequest request) {
         // Récupérer l'adresse e-mail de l'utilisateur à partir du token
@@ -80,7 +82,7 @@ public class PanierController {
 
         return ResponseEntity.ok(panier);
     }
-
+    @PreAuthorize("hasAuthority('CLIENT')")
     @DeleteMapping("/panier/article/{ligneId}")
     public ResponseEntity<String> supprimerArticleDuPanier(@PathVariable Long ligneId, HttpServletRequest request) {
         String token = request.getHeader("Authorization");
@@ -116,7 +118,7 @@ public class PanierController {
 
         return ResponseEntity.ok("Article supprimé du panier avec succès");
     }
-
+    @PreAuthorize("hasAuthority('CLIENT')")
     @DeleteMapping("/panier/vider")
     public ResponseEntity<String> viderPanier(HttpServletRequest request) {
         String token = request.getHeader("Authorization");
@@ -138,7 +140,7 @@ public class PanierController {
 
         return ResponseEntity.ok("Panier vidé avec succès");
     }
-
+    @PreAuthorize("hasAuthority('CLIENT')")
     @PutMapping("/article/{ligneId}")
     public ResponseEntity<String> modifierQuantiteLigne(HttpServletRequest request, @PathVariable Long ligneId, @RequestParam("nouvelleQuantite") int nouvelleQuantite) {
         String token = request.getHeader("Authorization");

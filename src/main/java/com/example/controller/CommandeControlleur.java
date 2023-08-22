@@ -7,6 +7,7 @@ import com.example.repository.CommandeRepository;
 import com.example.service.UtilisateurService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -23,6 +24,7 @@ public class CommandeControlleur {
     private JwtTokenUtil jwtTokenUtil;
     @Autowired
     private CommandeRepository commandeRepository;
+    @PreAuthorize("hasAuthority('CLIENT')")
     @GetMapping("/commande")
     public ResponseEntity<List<Commande>>afficherCommandeUtilisateur(HttpServletRequest request) {
         // Récupérer l'adresse e-mail de l'utilisateur à partir du token
@@ -38,7 +40,7 @@ public class CommandeControlleur {
 
         return ResponseEntity.ok(commande);
     }
-
+    @PreAuthorize("hasAuthority('ADMINISTRATEUR')")
     @GetMapping("/commande/all")
     public ResponseEntity<List<Commande>> afficherToutesLesCommandes() {
         List<Commande> commandes = commandeRepository.findAll();

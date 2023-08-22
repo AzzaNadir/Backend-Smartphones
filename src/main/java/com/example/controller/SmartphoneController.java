@@ -8,6 +8,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
@@ -24,23 +25,7 @@ public class SmartphoneController {
     @Autowired
     private SmartphoneService smartphoneService;
 
-    //    @PostMapping("/AddSmartphones")
-//    public ResponseEntity<Smartphone> addSmartphone(@RequestParam("nom") String nom,
-//                                                    @RequestParam("description") String description,
-//                                                    @RequestParam("prix") float prix,
-//                                                    @RequestParam("quantiteStock") int quantiteStock,
-//                                                    @RequestParam("image") MultipartFile file,
-//                                                    @RequestParam("modele") String modele,
-//                                                    @RequestParam("marque") String marque,
-//                                                    @RequestParam("couleur") String couleur,
-//                                                    @RequestParam("stockage") String stockage,
-//                                                    @RequestParam("memoireRam") String memoireRam,
-//                                                    @RequestParam("tailleEcran") double tailleEcran) throws IOException {
-//        byte[] image = file.getBytes();
-//        Smartphone smartphone = new Smartphone(nom, description, prix, quantiteStock, image, modele, MarqueSmartphone.valueOf(marque.toUpperCase()), Couleur.valueOf(couleur.toUpperCase()), stockage, memoireRam, tailleEcran);
-//        smartphoneService.ajouterSmartphone(smartphone);
-//        return new ResponseEntity<>(HttpStatus.CREATED);
-//    }
+    @PreAuthorize("hasAuthority('ADMINISTRATEUR')")
     @PostMapping("/AddSmartphones")
     public ResponseEntity<Smartphone> addSmartphone(@RequestParam("nom") String nom,
                                                     @RequestParam("description") String description,
@@ -55,7 +40,7 @@ public class SmartphoneController {
                                                     @RequestParam("tailleEcran") double tailleEcran) throws IOException {
         byte[] image = file.getBytes();
 
-        List<Produit> existingSmartphones = smartphoneService.rechercherSmartphonesParCritere(marque, modele, couleur,stockage);
+        List<Produit> existingSmartphones = smartphoneService.rechercherSmartphonesParCritere(marque, modele, couleur, stockage);
         if (!existingSmartphones.isEmpty()) {
             // Un smartphone avec les mêmes attributs existe déjà, renvoyer une réponse d'erreur appropriée
             return new ResponseEntity<>(HttpStatus.CONFLICT); // HTTP 409 - Conflict
@@ -66,18 +51,8 @@ public class SmartphoneController {
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
-    @PostMapping("/AddSmartphones2")
-    public ResponseEntity<Smartphone> addSmartphone(@ModelAttribute Smartphone smartreq, @RequestParam("image") MultipartFile file) throws IOException {
 
-        // Extraction de l'image du formulaire
-        byte[] image = file.getBytes();
-
-        Smartphone smartphone = new Smartphone(smartreq.getNom(), smartreq.getDescription(), smartreq.getPrix(), smartreq.getQuantiteStock(), image, smartreq.getModele(), MarqueSmartphone.valueOf(smartreq.getMarque().name().toUpperCase()), Couleur.valueOf(smartreq.getCouleur().name().toUpperCase()), smartreq.getStockage(), smartreq.getMemoireRam(), smartreq.getTailleEcran());
-
-        smartphoneService.ajouterSmartphone(smartphone);
-        return new ResponseEntity<>(smartphone, HttpStatus.CREATED);
-    }
-
+    @PreAuthorize("hasAuthority('ADMINISTRATEUR')")
     @PutMapping("/produits/{id}")
     public ResponseEntity<Smartphone> updateSmartphone(@PathVariable("id") Long id,
                                                        MultipartHttpServletRequest request) throws IOException {
@@ -116,10 +91,7 @@ public class SmartphoneController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-//        @GetMapping("/AfficherSmartphones")
-//    public List<Produit> getSmartphonePresentation() {
-//        return smartphoneService.SmartphonePresentation();
-//    }
+
     @GetMapping("/AfficherSmartphones")
     public ResponseEntity<Page<Produit>> getSmartphonePresentation(Pageable pageable) {
         Page<Produit> smartphones = smartphoneService.SmartphonePresentation(pageable);
