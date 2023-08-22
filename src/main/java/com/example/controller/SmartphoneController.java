@@ -95,10 +95,8 @@ public class SmartphoneController {
             smartphone.setPrix(Double.parseDouble(request.getParameter("prix")));
             smartphone.setQuantiteStock(Integer.parseInt(request.getParameter("quantiteStock")));
             smartphone.setModele(request.getParameter("modele"));
-            MarqueSmartphone marque = MarqueSmartphone.valueOf(request.getParameter("marque").toUpperCase());
-            smartphone.setMarque(marque);
-            Couleur couleur = Couleur.valueOf(request.getParameter("couleur").toUpperCase());
-            smartphone.setCouleur(couleur);
+            smartphone.setMarque(MarqueSmartphone.valueOf(request.getParameter("marque").toUpperCase()));
+            smartphone.setCouleur(Couleur.valueOf(request.getParameter("couleur").toUpperCase()));
             smartphone.setStockage(request.getParameter("stockage"));
             smartphone.setMemoireRam(request.getParameter("memoireRam"));
             smartphone.setTailleEcran(Double.parseDouble(request.getParameter("tailleEcran")));
@@ -113,14 +111,6 @@ public class SmartphoneController {
             throw new IllegalArgumentException("Produit with ID " + id + " is not a Smartphone.");
         }
 
-        String rechercheMarque = String.valueOf(smartphone.getMarque());
-        Couleur rechercheCouleur = smartphone.getCouleur();
-
-        List<Produit> existingSmartphones = smartphoneService.rechercherSmartphonesParCritere(rechercheMarque, smartphone.getModele(), String.valueOf(rechercheCouleur),smartphone.getStockage());
-        if (!existingSmartphones.isEmpty()) {
-            // Un smartphone avec les mêmes attributs existe déjà, renvoyer une réponse d'erreur appropriée
-            return new ResponseEntity<>(HttpStatus.CONFLICT); // HTTP 409 - Conflict
-        }
         smartphoneService.ajouterSmartphone(smartphone);
 
         return new ResponseEntity<>(HttpStatus.OK);
