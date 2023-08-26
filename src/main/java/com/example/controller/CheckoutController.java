@@ -97,21 +97,28 @@ public class CheckoutController {
 
         // Déclencher le processus de capture du paiement.
         try {
-            payPalHttpClient.captureOrder(orderId);
-            var out = orderDAO.findByPaypalOrderId(orderId);
-            out.setPaypalOrderStatus(OrderStatus.APPROVED.toString());
-            out.setPaymentDate(LocalDate.now());
-
-
-            orderDAO.save(out);
             Utilisateur utilisateur = utilisateurService.getUtilisateurParEmail(emailUtilisateur);
-
             Panier panier = utilisateur.getPanier();
 
             if (panier != null) {
                 List<LignePanier> lignesPanier = panier.getLignesPanier();
                 // Créer la commande à partir du panier et sauvegarder en base de données.
 
+                for (LignePanier lignePanier : lignesPanier) {
+                    Produit produit = lignePanier.getProduit();
+
+                    // Vérifier si le produit est encore en stock
+                    if (produit.getQuantiteStock() == 0) {
+                        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("L'article " + produit.getNom() + " n'est plus en stock.");
+                    }
+                }
+
+                payPalHttpClient.captureOrder(orderId);
+                var out = orderDAO.findByPaypalOrderId(orderId);
+                out.setPaypalOrderStatus(OrderStatus.APPROVED.toString());
+                out.setPaymentDate(LocalDate.now());
+
+                orderDAO.save(out);
                 commandeService.createAndSaveCommande(panier, lignesPanier);
 
                 // Nettoyer le panier après la création de la commande.
@@ -186,10 +193,10 @@ public class CheckoutController {
         if (!orders.isEmpty()) {
             Order order = orders.get(orders.size() - 1);
             totalAmountWithTax = order.getAmount();
-            statusPayment= order.getPaypalOrderStatus();
+            statusPayment = order.getPaypalOrderStatus();
         }
-        if (statusPayment=="APPROVED"){
-            statusPayment= "Payé";
+        if (statusPayment == "APPROVED") {
+            statusPayment = "Payé";
         }
         // Calculer la TVA en supposant un taux de TVA de 20% (à adapter selon votre taux réel).
         BigDecimal taxRate = new BigDecimal("0.21"); // Exemple pour 20% de TVA
@@ -217,7 +224,7 @@ public class CheckoutController {
         emailContentBuilder.append("<h3>Détails de la commande :</h3>")
                 .append("<p>Date de commande : " + commande.getDateCommande().format(dateFormatter) + "</p>")
                 .append("<p>Statut de la commande : " + commande.getCommandeStatus() + "</p>")
-                .append("<p>Statut du payment : " +  statusPayment+ "</p>");
+                .append("<p>Statut du payment : " + statusPayment + "</p>");
 
         List<LigneCommande> lignesCommande = commande.getLignesCommande();
         emailContentBuilder.append("<h3>Détails des produits :</h3><ul>");
@@ -225,7 +232,7 @@ public class CheckoutController {
             Produit produit = ligneCommande.getProduit();
             if (produit instanceof Smartphone) {
                 Smartphone smartphone = (Smartphone) produit;
-                emailContentBuilder.append("<li>Produit : " + smartphone.getMarque() + " " + smartphone.getModele() + " " + smartphone.getCouleur() + " " + smartphone.getTailleEcran()+"\""+ " " +smartphone.getStockage() + " " + smartphone.getMemoireRam() + "</li>")
+                emailContentBuilder.append("<li>Produit : " + smartphone.getMarque() + " " + smartphone.getModele() + " " + smartphone.getCouleur() + " " + smartphone.getTailleEcran() + "\"" + " " + smartphone.getStockage() + " " + smartphone.getMemoireRam() + "</li>")
                         .append("<li>Quantité : " + ligneCommande.getQuantite() + "</li>")
                         .append("<li>Prix unitaire : " + ligneCommande.getPrixUnitaire() + " € TVAC</li>")
                         .append("<li>Total : " + ligneCommande.getTotalLigne() + " € TVAC</li><br>");

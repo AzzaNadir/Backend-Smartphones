@@ -1,18 +1,25 @@
 package com.example.model;
 
+import com.fasterxml.jackson.annotation.JsonSubTypes;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
+
 import javax.persistence.*;
 import javax.validation.constraints.DecimalMin;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
-import java.util.List;
 import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "produit")
+@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, property = "type_produit")
+@JsonSubTypes({
+        @JsonSubTypes.Type(value = Smartphone.class, name = "SMARTPHONE")
+})
 
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(name = "type_produit")
-public abstract class Produit {
+public abstract  class Produit {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_produit")
