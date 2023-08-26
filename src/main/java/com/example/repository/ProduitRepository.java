@@ -27,15 +27,29 @@ public interface ProduitRepository extends JpaRepository<Produit, Long> {
     @Query("SELECT p FROM Produit p WHERE TYPE(p) = Smartphone AND p.marque = IFNULL(:marque, p.marque) AND p.modele = IFNULL(:modele, p.modele) AND p.couleur = IFNULL(:couleur, p.couleur) AND p.stockage = IFNULL(:stockage, p.stockage)\n")
     public List<Produit> findSmartphonesByCriteria(@Param("marque") String marque, @Param("modele") String modele, @Param("couleur") String couleur, @Param("stockage") String stockage);
 
-    @Query("SELECT p FROM Produit p WHERE TYPE(p) = Smartphone AND p.marque = IFNULL(:marque, p.marque) AND p.modele = IFNULL(:modele, p.modele) AND p.couleur = IFNULL(:couleur, p.couleur) AND p.tailleEcran = IFNULL(:tailleEcran, p.tailleEcran) AND p.memoireRam = IFNULL(:memoireRam, p.memoireRam) AND p.stockage = IFNULL(:stockage, p.stockage)")
+//    @Query("SELECT p FROM Produit p WHERE TYPE(p) = Smartphone AND p.marque = IFNULL(:marque, p.marque) AND p.modele = IFNULL(:modele, p.modele) AND p.couleur = IFNULL(:couleur, p.couleur) AND p.tailleEcran = IFNULL(:tailleEcran, p.tailleEcran) AND p.memoireRam = IFNULL(:memoireRam, p.memoireRam) AND p.stockage = IFNULL(:stockage, p.stockage)")
+//    Page<Produit> findSmartphonesByCritere(
+//            @Param("marque") String marque,
+//            @Param("modele") String modele,
+//            @Param("couleur") String couleur,
+//            @Param("tailleEcran") Double tailleEcran,
+//            @Param("memoireRam") String memoireRam,
+//            @Param("stockage") String stockage,
+//            Pageable pageable
+//    );
+
+
+    @Query("SELECT p FROM Produit p WHERE TYPE(p) = Smartphone " +
+            "AND ( COALESCE(:marques, null) IS NULL OR p.marque IN :marques ) "+
+            "AND (COALESCE(:modeles, null)  IS NULL OR p.modele IN :modeles) " +
+            "AND (COALESCE(:couleurs, null)  IS NULL OR p.couleur IN :couleurs) " +
+            "AND (COALESCE(:tailleEcrans, null)  IS NULL OR p.tailleEcran IN :tailleEcrans) " +
+            "AND (COALESCE(:memoireRams, null)  IS NULL OR p.memoireRam IN :memoireRams) " +
+            "AND (COALESCE(:stockages, null)  IS NULL OR p.stockage IN :stockages)")
     Page<Produit> findSmartphonesByCritere(
-            @Param("marque") String marque,
-            @Param("modele") String modele,
-            @Param("couleur") String couleur,
-            @Param("tailleEcran") Double tailleEcran,
-            @Param("memoireRam") String memoireRam,
-            @Param("stockage") String stockage,
-            Pageable pageable
+            @Param("marques") List<MarqueSmartphone> marques,
+
+            List<String> modeles, List<Couleur> couleurs, List<Double> tailleEcrans, List<String> memoireRams, List<String> stockages, Pageable pageable
     );
 
     List<Smartphone> findSmartphonesByStockageAndCouleur(Integer stockage, String couleur);

@@ -16,7 +16,6 @@ import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 
-
 @Service
 @CrossOrigin
 public class SmartphoneService {
@@ -70,9 +69,16 @@ public class SmartphoneService {
         return produitRepository.findSmartphonesByCriteria(marque, modele, couleur, stockage);
     }
 
-    public Page<Produit> findSmartphonesParCritere(String marque, String modele, String couleur, Double tailleEcran, String memoireRam, String stockage, Pageable pageable) {
-        return produitRepository.findSmartphonesByCritere(marque, modele, couleur, tailleEcran, memoireRam, stockage, pageable);
+//    public Page<Produit> findSmartphonesParCritere(String marque, String modele, String couleur, Double tailleEcran, String memoireRam, String stockage, Pageable pageable) {
+//        return produitRepository.findSmartphonesByCritere(marque, modele, couleur, tailleEcran, memoireRam, stockage, pageable);
+//    }
+
+    public Page<Produit> findSmartphonesParCritere(List<MarqueSmartphone> marques, List<String> modeles, List<Couleur> couleurs, List<Double> tailleEcrans, List<String> memoireRams ,List<String> stockages, Pageable pageable) {
+
+        return produitRepository.findSmartphonesByCritere(
+                marques, modeles, couleurs, tailleEcrans, memoireRams, stockages, pageable);
     }
+
 
     public List<Produit> getAvailableColorsByMarqueAndModele(MarqueSmartphone marque, String modele) {
         return produitRepository.findAvailableColorsByMarqueAndModele(marque, modele);

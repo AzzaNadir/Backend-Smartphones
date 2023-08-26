@@ -145,14 +145,19 @@ public class SmartphoneController {
 
     @GetMapping("/SmartphonesFiltre")
     public ResponseEntity<Page<Produit>> getSmartphonesByFiltersAndPagination(
-            @RequestParam(value = "marque", required = false) String marque,
-            @RequestParam(value = "modele", required = false) String modele,
-            @RequestParam(value = "couleur", required = false) String couleur,
-            @RequestParam(value = "stockage", required = false) String stockage,
-            @RequestParam(value = "memoireRam", required = false) String memoireRam,
-            @RequestParam(value = "tailleEcran", required = false) Double tailleEcran,
+            @RequestParam(value = "marques", required = false) List<MarqueSmartphone> marques,
+            @RequestParam(value = "modeles", required = false) List<String> modeles,
+            @RequestParam(value = "couleurs", required = false) List<Couleur> couleurs,
+            @RequestParam(value = "stockages", required = false) List<String> stockages,
+            @RequestParam(value = "memoireRams", required = false) List<String> memoireRams,
+            @RequestParam(value = "tailleEcrans", required = false) List<Double> tailleEcrans,
             Pageable pageable) {
-        Page<Produit> smartphones = smartphoneService.findSmartphonesParCritere(marque, modele, couleur, tailleEcran, memoireRam, stockage, pageable);
+
+        System.out.println("mes marques"+marques);
+        System.out.println("mes couleurs"+couleurs
+        );
+
+        Page<Produit> smartphones = smartphoneService.findSmartphonesParCritere(marques, modeles, couleurs, tailleEcrans, memoireRams, stockages, pageable);
         return ResponseEntity.ok(smartphones);
     }
 
