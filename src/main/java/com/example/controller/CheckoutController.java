@@ -20,7 +20,7 @@ import javax.mail.internet.MimeMessage;
 import javax.servlet.http.HttpServletRequest;
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
@@ -116,7 +116,7 @@ public class CheckoutController {
                 payPalHttpClient.captureOrder(orderId);
                 var out = orderDAO.findByPaypalOrderId(orderId);
                 out.setPaypalOrderStatus(OrderStatus.APPROVED.toString());
-                out.setPaymentDate(LocalDate.now());
+                out.setPaymentDateTime(LocalDateTime.now());
 
                 orderDAO.save(out);
                 commandeService.createAndSaveCommande(panier, lignesPanier);
@@ -159,33 +159,6 @@ public class CheckoutController {
         mailSender.send(message);
     }
 
-//    private String generateEmailContent(Commande commande, Utilisateur utilisateur) {
-//        BigDecimal totalAmountWithTax = BigDecimal.ZERO;
-//        List<Order> orders = utilisateur.getOrders();
-//        if (!orders.isEmpty()) {
-//            Order order = orders.get(orders.size() - 1);
-//            totalAmountWithTax = order.getAmount();
-//        }
-//        // Calculer la TVA en supposant un taux de TVA de 20% (à adapter selon votre taux réel).
-//        BigDecimal taxRate = new BigDecimal("0.21"); // Exemple pour 20% de TVA
-//        BigDecimal taxAmount = totalAmountWithTax.multiply(taxRate);
-//
-//        BigDecimal totalAmount = totalAmountWithTax.subtract(taxAmount);
-//
-//        DecimalFormat decimalFormat = new DecimalFormat("#.##"); // Format pour les montants
-//
-//        String emailContent = "<html><body>"
-//                + "<h2>Confirmation de commande</h2>"
-//                + "<p>Merci d'avoir effectué votre commande. Voici les détails :</p>"
-//                + "<p>Sous-total : " + decimalFormat.format(totalAmount) + " EUR</p>"
-//                + "<p>TVA : " + decimalFormat.format(taxAmount) + " EUR</p>"
-//                + "<p>Total : " + decimalFormat.format(totalAmountWithTax) + " EUR</p>"
-//                + "</body></html>";
-//
-//        return emailContent;
-//    }
-
-
     private String generateEmailContent(Commande commande, Utilisateur utilisateur) {
         BigDecimal totalAmountWithTax = BigDecimal.ZERO;
         String statusPayment = "";
@@ -205,7 +178,7 @@ public class CheckoutController {
         BigDecimal totalAmount = totalAmountWithTax.subtract(taxAmount);
 
         DecimalFormat decimalFormat = new DecimalFormat("#.##"); // Format pour les montants
-        DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
 
         StringBuilder emailContentBuilder = new StringBuilder();
         emailContentBuilder.append("<html><body>")
@@ -222,7 +195,7 @@ public class CheckoutController {
                 .append("<p>Numéro de téléphone : " + utilisateur.getNumeroDeTelephone() + "</p>");
         // Ajouter les détails de la commande et les lignes de commande
         emailContentBuilder.append("<h3>Détails de la commande :</h3>")
-                .append("<p>Date de commande : " + commande.getDateCommande().format(dateFormatter) + "</p>")
+                .append("<p>Date de commande : " + commande.getDateTimeCommande().format(dateTimeFormatter) + "</p>")
                 .append("<p>Statut de la commande : " + commande.getCommandeStatus() + "</p>")
                 .append("<p>Statut du payment : " + statusPayment + "</p>");
 

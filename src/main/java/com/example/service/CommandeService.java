@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -47,9 +48,9 @@ public class CommandeService {
         Commande commande = new Commande();
         Utilisateur utilisateur = panier.getUtilisateur();
         commande.setUtilisateur(utilisateur);
+        commande.setDateTimeCommande(LocalDateTime.now());
         if (!utilisateur.getOrders().isEmpty()) {
             int lastIndex = utilisateur.getOrders().size() - 1;
-            commande.setDateCommande(utilisateur.getOrders().get(lastIndex).getPaymentDate());
             commande.setCommandeStatus("En cours de livraison");
         } else {
             // Gérer le cas où l'utilisateur n'a aucune commande.

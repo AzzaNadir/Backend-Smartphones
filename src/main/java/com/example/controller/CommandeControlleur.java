@@ -28,18 +28,14 @@ public class CommandeControlleur {
     @GetMapping("/commande")
     public ResponseEntity<List<Commande>>afficherCommandeUtilisateur(HttpServletRequest request) {
         // Récupérer l'adresse e-mail de l'utilisateur à partir du token
-        String token = request.getHeader("Authorization");
-        String emailUtilisateur = jwtTokenUtil.getUsernameFromToken(token.substring(7));
+        Utilisateur utilisateur = utilisateurService.getUtilisateurFromToken(request);
 
-        // Ensuite, utilisez le service ou le référentiel pour trouver l'utilisateur par adresse e-mail
-        Utilisateur utilisateur = utilisateurService.getUtilisateurParEmail(emailUtilisateur);
-        if (utilisateur == null) {
-            return ResponseEntity.notFound().build();
-        }
         List<Commande> commande = utilisateur.getCommandes();
 
         return ResponseEntity.ok(commande);
     }
+
+
     @PreAuthorize("hasAuthority('ADMINISTRATEUR')")
     @GetMapping("/commande/all")
     public ResponseEntity<List<Commande>> afficherToutesLesCommandes() {

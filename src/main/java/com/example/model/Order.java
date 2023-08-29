@@ -5,7 +5,7 @@ import org.springframework.stereotype.Component;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "paypal_orders")
@@ -19,8 +19,8 @@ public class Order {
     private String paypalOrderId;
     @Column(name = "paypal_order_status")
     private String paypalOrderStatus;
-    @Column(name = "payment_date")
-    private LocalDate paymentDate;
+    @Column(name = "payment_dateTime")
+    private LocalDateTime paymentDateTime;
     @Column(name = "amount")
     private BigDecimal amount;
 

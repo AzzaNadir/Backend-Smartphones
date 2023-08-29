@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import lombok.Data;
 
 import javax.persistence.*;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,9 +26,11 @@ public class Commande {
     @OneToMany(mappedBy = "commande", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<LigneCommande> lignesCommande = new ArrayList<>();
 
-    @Column(name = "date_commande")
-    private LocalDate dateCommande;
+    @Column(name = "dateTime_commande")
+    private LocalDateTime dateTimeCommande;
 
     @Column(name = "commande_status")
     private String commandeStatus;
+
+
 }
