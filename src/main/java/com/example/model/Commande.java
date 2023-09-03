@@ -1,7 +1,6 @@
 package com.example.model;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import lombok.Data;
 
@@ -20,8 +19,7 @@ public class Commande {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_commande")
     private Long id;
-    @ManyToOne
-    @JsonIgnore
+    @OneToOne
     @JoinColumn(name = "utilisateur_id")
     private Utilisateur utilisateur;
 
@@ -34,7 +32,7 @@ public class Commande {
     @Column(name = "commande_status")
     private String commandeStatus;
 
-    @OneToMany(mappedBy = "commande", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Order> orders = new ArrayList<>();
+    @OneToOne(mappedBy = "commande", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Order orders ;
 
 }

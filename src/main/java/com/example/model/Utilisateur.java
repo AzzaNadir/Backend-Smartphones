@@ -1,8 +1,6 @@
 package com.example.model;
 
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import org.springframework.stereotype.Component;
 
 import javax.persistence.*;
@@ -16,7 +14,7 @@ import java.util.List;
 @Entity
 @Table(name = "utilisateur")
 @Component
-@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
+//@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 
 public class Utilisateur {
 
@@ -61,9 +59,8 @@ public class Utilisateur {
     @JsonIgnore
     private Panier panier;
     @OneToMany(mappedBy = "utilisateur", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore
     private List<Commande> commandes = new ArrayList<>();
-    @OneToMany(mappedBy = "utilisateur", cascade = CascadeType.ALL)
-    private List<Order> orders = new ArrayList<>();
 
     public Utilisateur() {
         super();
@@ -151,14 +148,6 @@ public class Utilisateur {
 
     public void setCommandes(List<Commande> commandes) {
         this.commandes = commandes;
-    }
-
-    public List<Order> getOrders() {
-        return orders;
-    }
-
-    public void setOrders(List<Order> orders) {
-        this.orders = orders;
     }
 
     public String getNumeroDeTelephone() {

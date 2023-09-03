@@ -3,6 +3,7 @@ package com.example.controller;
 import com.example.configuration.JwtTokenUtil;
 import com.example.model.*;
 import com.example.repository.OrderDAO;
+import com.example.repository.ProduitRepository;
 import com.example.service.CommandeService;
 import com.example.service.PanierService;
 import com.example.service.PayPalHttpClient;
@@ -46,6 +47,8 @@ public class CheckoutController {
     private JavaMailSender mailSender;
 
     @Autowired
+    private ProduitRepository produitRepository;
+    @Autowired
     public CheckoutController(PayPalHttpClient payPalHttpClient, OrderDAO orderDAO) {
         this.orderDAO = orderDAO;
         this.payPalHttpClient = payPalHttpClient;
@@ -84,7 +87,6 @@ public class CheckoutController {
         entity.setPaypalOrderId(orderResponse.getId());
         entity.setPaypalOrderStatus(orderResponse.getStatus().toString());
         entity.setAmount(totalAmount);
-        entity.setUtilisateur(utilisateur);
         var out = orderDAO.save(entity);
         log.info("Saved order: {}", out);
         return ResponseEntity.ok(orderResponse);
@@ -107,8 +109,10 @@ public class CheckoutController {
                 for (LignePanier lignePanier : lignesPanier) {
                     Produit produit = lignePanier.getProduit();
 
-                    // Vérifier si le produit est encore en stock
-                    if (produit.getQuantiteStock() == 0) {
+                    // Vérifier si le produit est encore en stock en interrogeant la base de données
+                    int stockDisponible = produitRepository.getQuantiteStockById(produit.getId());
+                    System.out.println("STOCK DISPONIBLE"+stockDisponible);
+                    if (stockDisponible < lignePanier.getQuantite()) {
                         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("L'article " + produit.getNom() + " n'est plus en stock.");
                     }
                 }
@@ -117,7 +121,9 @@ public class CheckoutController {
                 out.setPaypalOrderStatus(OrderStatus.APPROVED.toString());
                 out.setPaymentDateTime(LocalDateTime.now());
                 orderDAO.save(out);
+
                 commandeService.createAndSaveCommande(panier, lignesPanier);
+
                 List<Commande> commandes = utilisateur.getCommandes();
                 Commande commande = commandes.get(commandes.size() - 1); // Récupérer la dernière commande
                 out.setCommande(commande);
@@ -134,6 +140,7 @@ public class CheckoutController {
             }
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Échec de la capture du paiement");
+
         }
 
         return ResponseEntity.ok().body("Paiement réussi");
@@ -161,15 +168,16 @@ public class CheckoutController {
     private String generateEmailContent(Commande commande, Utilisateur utilisateur) {
         BigDecimal totalAmountWithTax = BigDecimal.ZERO;
         String statusPayment = "";
-        List<Order> orders = utilisateur.getOrders();
-        if (!orders.isEmpty()) {
-            Order order = orders.get(orders.size() - 1);
-            totalAmountWithTax = order.getAmount();
-            statusPayment = order.getPaypalOrderStatus();
-        }
-        if (statusPayment == "APPROVED") {
-            statusPayment = "Payé";
-        }
+        Order orders = orderDAO.findByCommande(commande);
+            totalAmountWithTax = orders.getAmount();
+            statusPayment = orders.getPaypalOrderStatus();
+
+            if (statusPayment.equals("APPROVED")) {
+                statusPayment = "Payé";
+            }
+
+
+
         // Calculer la TVA en supposant un taux de TVA de 20% (à adapter selon votre taux réel).
         BigDecimal taxRate = new BigDecimal("0.21"); // Exemple pour 20% de TVA
         BigDecimal taxAmount = totalAmountWithTax.multiply(taxRate);

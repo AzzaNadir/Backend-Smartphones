@@ -49,16 +49,7 @@ public class CommandeService {
         Utilisateur utilisateur = panier.getUtilisateur();
         commande.setUtilisateur(utilisateur);
         commande.setDateTimeCommande(LocalDateTime.now());
-        if (!utilisateur.getOrders().isEmpty()) {
-            int lastIndex = utilisateur.getOrders().size() - 1;
-            commande.setCommandeStatus("En cours de livraison");
-        } else {
-            // Gérer le cas où l'utilisateur n'a aucune commande.
-            // Vous pouvez lever une exception ou gérer le cas selon vos besoins.
-            commande.setCommandeStatus("Refuser");
-            throw new RuntimeException("Aucune commande pour l'utilisateur : " + utilisateur.getEmail());
-        }
-
+        commande.setCommandeStatus("En cours de livraison");
         // Créer et associer les lignes de commande à la commande.
         for (LignePanier lignePanier : panier.getLignesPanier()) {
             LigneCommande ligneCommande = new LigneCommande();

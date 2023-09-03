@@ -24,12 +24,8 @@ public class Order {
     private LocalDateTime paymentDateTime;
     @Column(name = "amount")
     private BigDecimal amount;
-
-    @ManyToOne
     @JsonIgnore
-    @JoinColumn(name = "utilisateur_id")
-    private Utilisateur utilisateur;
-    @ManyToOne
+    @OneToOne
     @JoinColumn(name = "commande_id") // Clé étrangère vers la commande associée
     private Commande commande; // Ajoutez cette référence à la commande
 }
