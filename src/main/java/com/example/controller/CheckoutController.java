@@ -26,7 +26,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @RestController
-@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin
 @RequestMapping(value = "/checkout")
 @Slf4j
 public class CheckoutController {
