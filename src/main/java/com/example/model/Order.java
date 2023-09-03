@@ -1,5 +1,6 @@
 package com.example.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import org.springframework.stereotype.Component;
 
@@ -25,7 +26,10 @@ public class Order {
     private BigDecimal amount;
 
     @ManyToOne
+    @JsonIgnore
     @JoinColumn(name = "utilisateur_id")
     private Utilisateur utilisateur;
-
+    @ManyToOne
+    @JoinColumn(name = "commande_id") // Clé étrangère vers la commande associée
+    private Commande commande; // Ajoutez cette référence à la commande
 }

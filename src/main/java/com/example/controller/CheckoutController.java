@@ -112,20 +112,19 @@ public class CheckoutController {
                         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("L'article " + produit.getNom() + " n'est plus en stock.");
                     }
                 }
-
                 payPalHttpClient.captureOrder(orderId);
                 var out = orderDAO.findByPaypalOrderId(orderId);
                 out.setPaypalOrderStatus(OrderStatus.APPROVED.toString());
                 out.setPaymentDateTime(LocalDateTime.now());
-
                 orderDAO.save(out);
                 commandeService.createAndSaveCommande(panier, lignesPanier);
-
+                List<Commande> commandes = utilisateur.getCommandes();
+                Commande commande = commandes.get(commandes.size() - 1); // Récupérer la dernière commande
+                out.setCommande(commande);
                 // Nettoyer le panier après la création de la commande.
                 panierService.clearPanier(panier);
-                List<Commande> commandes = utilisateur.getCommandes();
                 if (!commandes.isEmpty()) {
-                    Commande commande = commandes.get(commandes.size() - 1); // Récupérer la dernière commande
+
                     sendOrderConfirmationEmail(emailUtilisateur, commande, utilisateur);
                 } else {
                     return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Commande introuvable");
