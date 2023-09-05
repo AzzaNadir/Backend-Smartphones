@@ -18,6 +18,7 @@ import java.util.Map;
 
 @RestController
 @CrossOrigin
+@RequestMapping(value = "/api")
 public class PasswordResetController {
     @Autowired
     private UtilisateurService utilisateurService;
@@ -31,7 +32,7 @@ public class PasswordResetController {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-    @PostMapping("/reset-password")
+    @PostMapping("/request-password")
     public ResponseEntity<String> requestPasswordReset(@RequestParam("email") String userEmail) {
         Utilisateur utilisateur = utilisateurService.getUtilisateurParEmail(userEmail);
         if (utilisateur == null) {
@@ -48,7 +49,7 @@ public class PasswordResetController {
         return ResponseEntity.ok("Un e-mail de réinitialisation de mot de passe a été envoyé.");
     }
 
-    @PostMapping("/api/reset-password")
+    @PostMapping("/reset-password")
     public ResponseEntity<String> resetPassword(@RequestParam("token") String token, @RequestBody Map<String, String> request) {
         String newPassword = request.get("password");
 

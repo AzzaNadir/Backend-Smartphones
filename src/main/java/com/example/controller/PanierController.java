@@ -19,7 +19,7 @@ import java.util.List;
 
 @RestController
 @CrossOrigin
-
+@RequestMapping(value = "/api")
 public class PanierController {
     @Autowired
     private PanierService panierService;

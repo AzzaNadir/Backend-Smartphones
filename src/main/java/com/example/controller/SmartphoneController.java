@@ -18,7 +18,7 @@ import java.util.List;
 
 @RestController
 @CrossOrigin
-
+@RequestMapping(value = "/api")
 public class SmartphoneController {
     @Autowired
     private ProduitService produitService;
