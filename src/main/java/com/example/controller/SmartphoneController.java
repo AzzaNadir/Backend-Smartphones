@@ -131,7 +131,7 @@ public class SmartphoneController {
         }
     }
 
-    @GetMapping("/SmartphonesFiltre")
+    @GetMapping("/Smartphones")
     public ResponseEntity<Page<Produit>> getSmartphonesByFiltersAndPagination(
             @RequestParam(value = "marques", required = false) List<MarqueSmartphone> marques,
             @RequestParam(value = "modeles", required = false) List<String> modeles,

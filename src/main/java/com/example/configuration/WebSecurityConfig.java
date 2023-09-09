@@ -52,7 +52,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         httpSecurity
                 .csrf().disable()
                 .cors().and() // enable CORS
-                .authorizeRequests().antMatchers("/api/authenticate", "/api/AfficherSmartphones", "/api/SmartphonesFiltre", "/api/utilisateurs/register", "/api/Smartphones/{id}", "/api/Smartphones/{id}/availableOptions", "/api/GetSmartphonesByCaracteristiques", "/checkout/success", "/api/request-password", "/api/reset-password").permitAll().
+                .authorizeRequests().antMatchers("/api/authenticate", "/api/AfficherSmartphones", "/api/Smartphones", "/api/utilisateurs/register", "/api/Smartphones/{id}", "/api/Smartphones/{id}/availableOptions", "/api/GetSmartphonesByCaracteristiques", "/checkout/success", "/api/request-password", "/api/reset-password").permitAll().
                 anyRequest().authenticated().and().
                 exceptionHandling().authenticationEntryPoint(jwtAuthenticationEntryPoint).and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
         httpSecurity.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
