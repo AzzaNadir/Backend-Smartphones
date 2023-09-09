@@ -48,6 +48,7 @@ public class CheckoutController {
 
     @Autowired
     private ProduitRepository produitRepository;
+
     @Autowired
     public CheckoutController(PayPalHttpClient payPalHttpClient, OrderDAO orderDAO) {
         this.orderDAO = orderDAO;
@@ -92,59 +93,6 @@ public class CheckoutController {
         return ResponseEntity.ok(orderResponse);
     }
 
-
-//    @GetMapping(value = "/success")
-//    public ResponseEntity<String> paymentSuccess(HttpServletRequest request, @RequestParam("utilisateur") String emailUtilisateur) {
-//        var orderId = request.getParameter("token");
-//
-//        // Déclencher le processus de capture du paiement.
-//        try {
-//            Utilisateur utilisateur = utilisateurService.getUtilisateurParEmail(emailUtilisateur);
-//            Panier panier = utilisateur.getPanier();
-//
-//            if (panier != null) {
-//                List<LignePanier> lignesPanier = panier.getLignesPanier();
-//                // Créer la commande à partir du panier et sauvegarder en base de données.
-//
-//                for (LignePanier lignePanier : lignesPanier) {
-//                    Produit produit = lignePanier.getProduit();
-//
-//                    // Vérifier si le produit est encore en stock en interrogeant la base de données
-//                    int stockDisponible = produitRepository.getQuantiteStockById(produit.getId());
-//                    System.out.println("STOCK DISPONIBLE"+stockDisponible);
-//                    if (stockDisponible < lignePanier.getQuantite()) {
-//                        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("L'article " + produit.getNom() + " n'est plus en stock.");
-//                    }
-//                }
-//                payPalHttpClient.captureOrder(orderId);
-//                var out = orderDAO.findByPaypalOrderId(orderId);
-//                out.setPaypalOrderStatus(OrderStatus.APPROVED.toString());
-//                out.setPaymentDateTime(LocalDateTime.now());
-//                orderDAO.save(out);
-//
-//                commandeService.createAndSaveCommande(panier, lignesPanier);
-//
-//                List<Commande> commandes = utilisateur.getCommandes();
-//                Commande commande = commandes.get(commandes.size() - 1); // Récupérer la dernière commande
-//                out.setCommande(commande);
-//                // Nettoyer le panier après la création de la commande.
-//                panierService.clearPanier(panier);
-//                if (!commandes.isEmpty()) {
-//
-//                    sendOrderConfirmationEmail(emailUtilisateur, commande, utilisateur);
-//                } else {
-//                    return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Commande introuvable");
-//                }
-//            } else {
-//                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Panier introuvable");
-//            }
-//        } catch (Exception e) {
-//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Échec de la capture du paiement");
-//
-//        }
-//
-//        return ResponseEntity.ok().body("Paiement réussi");
-//    }
 
     @GetMapping(value = "/success")
     public ResponseEntity<String> paymentSuccess(HttpServletRequest request, @RequestParam("utilisateur") String emailUtilisateur) {
@@ -219,13 +167,12 @@ public class CheckoutController {
         BigDecimal totalAmountWithTax = BigDecimal.ZERO;
         String statusPayment = "";
         Order orders = orderDAO.findByCommande(commande);
-            totalAmountWithTax = orders.getAmount();
-            statusPayment = orders.getPaypalOrderStatus();
+        totalAmountWithTax = orders.getAmount();
+        statusPayment = orders.getPaypalOrderStatus();
 
-            if (statusPayment.equals("APPROVED")) {
-                statusPayment = "Payé";
-            }
-
+        if (statusPayment.equals("APPROVED")) {
+            statusPayment = "Payé";
+        }
 
 
         // Calculer la TVA en supposant un taux de TVA de 20% (à adapter selon votre taux réel).
