@@ -20,29 +20,6 @@ public class CommandeService {
     @Autowired
     ProduitRepository produitRepository;
 
-    //    public void createAndSaveCommande(Panier panier) {
-//        Commande commande = new Commande();
-//        commande.setUtilisateur(panier.getUtilisateur());
-//        commande.setDateCommande(order.getPaymentDate());
-//        commande.setTotalCommande(order.getAmount());
-//
-//        // Créer et associer les lignes de commande à la commande.
-//        for (LignePanier lignePanier : panier.getLignesPanier()) {
-//            LigneCommande ligneCommande = new LigneCommande();
-//            ligneCommande.setCommande(commande);
-//            ligneCommande.setProduit(lignePanier.getProduit());
-//            ligneCommande.setQuantite(lignePanier.getQuantite());
-//            ligneCommande.setPrixUnitaire(lignePanier.getPrixUnitaire());
-//            ligneCommande.setTotalLigne(lignePanier.getPrixTotal());
-//            commande.getLignesCommande().add(ligneCommande);
-//
-//        }
-//        Utilisateur utilisateur = panier.getUtilisateur();
-//        utilisateur.getCommandes().add(commande);
-//        commande.setUtilisateur(utilisateur);
-//        commandeRepository.save(commande);
-//
-//    }
     @Transactional
     public void createAndSaveCommande(Panier panier, List<LignePanier> lignesPanier) {
         Commande commande = new Commande();
