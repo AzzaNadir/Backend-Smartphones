@@ -1,6 +1,5 @@
 package com.example.service;
 
-import com.example.configuration.JwtTokenUtil;
 import com.example.model.TypeUtilisateur;
 import com.example.model.Utilisateur;
 import com.example.repository.UtilisateurRepository;

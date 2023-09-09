@@ -1,6 +1,6 @@
 package com.example.controller;
 
-import com.example.configuration.JwtTokenUtil;
+import com.example.service.JwtTokenUtil;
 import com.example.model.ChangerMotDePasseRequest;
 import com.example.model.TypeUtilisateur;
 import com.example.model.Utilisateur;

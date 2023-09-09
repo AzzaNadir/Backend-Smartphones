@@ -1,6 +1,6 @@
 package com.example.controller;
 
-import com.example.configuration.JwtTokenUtil;
+import com.example.service.JwtTokenUtil;
 import com.example.model.LignePanier;
 import com.example.model.Panier;
 import com.example.model.Produit;
