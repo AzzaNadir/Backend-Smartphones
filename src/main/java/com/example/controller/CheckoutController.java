@@ -93,6 +93,59 @@ public class CheckoutController {
     }
 
 
+//    @GetMapping(value = "/success")
+//    public ResponseEntity<String> paymentSuccess(HttpServletRequest request, @RequestParam("utilisateur") String emailUtilisateur) {
+//        var orderId = request.getParameter("token");
+//
+//        // Déclencher le processus de capture du paiement.
+//        try {
+//            Utilisateur utilisateur = utilisateurService.getUtilisateurParEmail(emailUtilisateur);
+//            Panier panier = utilisateur.getPanier();
+//
+//            if (panier != null) {
+//                List<LignePanier> lignesPanier = panier.getLignesPanier();
+//                // Créer la commande à partir du panier et sauvegarder en base de données.
+//
+//                for (LignePanier lignePanier : lignesPanier) {
+//                    Produit produit = lignePanier.getProduit();
+//
+//                    // Vérifier si le produit est encore en stock en interrogeant la base de données
+//                    int stockDisponible = produitRepository.getQuantiteStockById(produit.getId());
+//                    System.out.println("STOCK DISPONIBLE"+stockDisponible);
+//                    if (stockDisponible < lignePanier.getQuantite()) {
+//                        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("L'article " + produit.getNom() + " n'est plus en stock.");
+//                    }
+//                }
+//                payPalHttpClient.captureOrder(orderId);
+//                var out = orderDAO.findByPaypalOrderId(orderId);
+//                out.setPaypalOrderStatus(OrderStatus.APPROVED.toString());
+//                out.setPaymentDateTime(LocalDateTime.now());
+//                orderDAO.save(out);
+//
+//                commandeService.createAndSaveCommande(panier, lignesPanier);
+//
+//                List<Commande> commandes = utilisateur.getCommandes();
+//                Commande commande = commandes.get(commandes.size() - 1); // Récupérer la dernière commande
+//                out.setCommande(commande);
+//                // Nettoyer le panier après la création de la commande.
+//                panierService.clearPanier(panier);
+//                if (!commandes.isEmpty()) {
+//
+//                    sendOrderConfirmationEmail(emailUtilisateur, commande, utilisateur);
+//                } else {
+//                    return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Commande introuvable");
+//                }
+//            } else {
+//                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Panier introuvable");
+//            }
+//        } catch (Exception e) {
+//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Échec de la capture du paiement");
+//
+//        }
+//
+//        return ResponseEntity.ok().body("Paiement réussi");
+//    }
+
     @GetMapping(value = "/success")
     public ResponseEntity<String> paymentSuccess(HttpServletRequest request, @RequestParam("utilisateur") String emailUtilisateur) {
         var orderId = request.getParameter("token");
@@ -102,48 +155,45 @@ public class CheckoutController {
             Utilisateur utilisateur = utilisateurService.getUtilisateurParEmail(emailUtilisateur);
             Panier panier = utilisateur.getPanier();
 
-            if (panier != null) {
-                List<LignePanier> lignesPanier = panier.getLignesPanier();
-                // Créer la commande à partir du panier et sauvegarder en base de données.
+            if (panier == null) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Panier introuvable");
+            }
 
-                for (LignePanier lignePanier : lignesPanier) {
-                    Produit produit = lignePanier.getProduit();
+            List<LignePanier> lignesPanier = panier.getLignesPanier();
 
-                    // Vérifier si le produit est encore en stock en interrogeant la base de données
-                    int stockDisponible = produitRepository.getQuantiteStockById(produit.getId());
-                    System.out.println("STOCK DISPONIBLE"+stockDisponible);
-                    if (stockDisponible < lignePanier.getQuantite()) {
-                        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("L'article " + produit.getNom() + " n'est plus en stock.");
-                    }
+            for (LignePanier lignePanier : lignesPanier) {
+                Produit produit = lignePanier.getProduit();
+
+                // Vérifier si le produit est encore en stock en interrogeant la base de données
+                int stockDisponible = produitRepository.getQuantiteStockById(produit.getId());
+                System.out.println("STOCK DISPONIBLE" + stockDisponible);
+                if (stockDisponible < lignePanier.getQuantite()) {
+                    return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("L'article " + produit.getNom() + " n'est plus en stock.");
                 }
-                payPalHttpClient.captureOrder(orderId);
-                var out = orderDAO.findByPaypalOrderId(orderId);
-                out.setPaypalOrderStatus(OrderStatus.APPROVED.toString());
-                out.setPaymentDateTime(LocalDateTime.now());
-                orderDAO.save(out);
+            }
 
-                commandeService.createAndSaveCommande(panier, lignesPanier);
+            var out = orderDAO.findByPaypalOrderId(orderId);
+            out.setPaypalOrderStatus(OrderStatus.APPROVED.toString());
+            out.setPaymentDateTime(LocalDateTime.now());
+            orderDAO.save(out);
 
-                List<Commande> commandes = utilisateur.getCommandes();
+            commandeService.createAndSaveCommande(panier, lignesPanier);
+
+            List<Commande> commandes = utilisateur.getCommandes();
+            if (!commandes.isEmpty()) {
                 Commande commande = commandes.get(commandes.size() - 1); // Récupérer la dernière commande
                 out.setCommande(commande);
                 // Nettoyer le panier après la création de la commande.
                 panierService.clearPanier(panier);
-                if (!commandes.isEmpty()) {
-
-                    sendOrderConfirmationEmail(emailUtilisateur, commande, utilisateur);
-                } else {
-                    return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Commande introuvable");
-                }
+                payPalHttpClient.captureOrder(orderId);
+                sendOrderConfirmationEmail(emailUtilisateur, commande, utilisateur);
+                return ResponseEntity.ok().body("Paiement réussi");
             } else {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Panier introuvable");
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Commande introuvable");
             }
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Échec de la capture du paiement");
-
         }
-
-        return ResponseEntity.ok().body("Paiement réussi");
     }
 
     private void sendOrderConfirmationEmail(String recipientEmail, Commande commande, Utilisateur utilisateur) throws MessagingException {
