@@ -19,26 +19,26 @@ import java.util.List;
 
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(name = "type_produit")
-public abstract  class Produit {
+public abstract class Produit {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_produit")
     private Long id;
 
     @NotBlank
-    @Column(name = "nom_produit")
+    @Column(name = "nom_produit", nullable = false)
     private String nom;
 
     @NotBlank
-    @Column(name = "description_produit")
+    @Column(name = "description_produit", nullable = false)
     private String description;
 
     @DecimalMin("0.0")
-    @Column(name = "prix_produit")
+    @Column(name = "prix_produit", nullable = false)
     private double prix;
 
     @Min(0)
-    @Column(name = "quantite_stock_produit")
+    @Column(name = "quantite_stock_produit", nullable = false)
     private int quantiteStock;
 
 
@@ -49,7 +49,9 @@ public abstract  class Produit {
 
     @OneToMany(mappedBy = "produit", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<LigneCommande> lignesCommande = new ArrayList<>();
-    public Produit() {}
+
+    public Produit() {
+    }
 
     public Produit(String nom, String description, double prix, int quantiteStock, byte[] image) {
         this.nom = nom;

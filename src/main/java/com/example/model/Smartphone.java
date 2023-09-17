@@ -1,28 +1,31 @@
 package com.example.model;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+
 @Entity
 @DiscriminatorValue("SMARTPHONE")
 @Table(name = "smartphone")
 public class Smartphone extends Produit {
-
+    @NotBlank
     @Column(name = "modele")
     private String modele;
-
+    @NotNull
     @Enumerated(EnumType.STRING)
     @Column(name = "marque")
     private MarqueSmartphone marque;
-
+    @NotNull
     @Enumerated(EnumType.STRING)
     @Column(name = "couleur")
     private Couleur couleur;
-
+    @NotBlank
     @Column(name = "stockage")
     private String stockage;
-
+    @NotBlank
     @Column(name = "memoire_ram")
     private String memoireRam;
-
+    @NotNull
     @Column(name = "taille_ecran")
     private double tailleEcran;
 
@@ -40,6 +43,7 @@ public class Smartphone extends Produit {
         this.memoireRam = memoireRam;
         this.tailleEcran = tailleEcran;
     }
+
     public String getModele() {
         return modele;
     }

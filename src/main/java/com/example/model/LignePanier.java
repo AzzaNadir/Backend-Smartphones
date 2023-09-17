@@ -18,13 +18,16 @@ public class LignePanier {
     @ManyToOne
     @JoinColumn(name = "produit_id")
     private Produit produit;
-
+    @Column(name = "quantite")
     private int quantite;
 
     public void setPanier(Panier panier) {
         this.panier = panier;
     }
+
+    @Column(name = "prixUnitaire")
     private double prixUnitaire;
+    @Column(name = "prixTotal")
     private double prixTotal;
     public Long getId() {
         return id;

@@ -16,7 +16,7 @@ public class CommandeService {
     @Autowired
     private CommandeRepository commandeRepository;
     @Autowired
-    private Order order;
+    private PaypalOrder order;
     @Autowired
     ProduitRepository produitRepository;
 

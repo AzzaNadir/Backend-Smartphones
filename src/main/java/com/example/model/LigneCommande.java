@@ -20,16 +20,16 @@ public class LigneCommande {
     private Commande commande;
 
     @ManyToOne
-    @JoinColumn(name = "produit_id")
+    @JoinColumn(name = "produit_id", nullable = false)
     private Produit produit;
 
-    @Column(name = "quantite")
+    @Column(name = "quantite", nullable = false)
     private int quantite;
 
-    @Column(name = "prix_unitaire")
+    @Column(name = "prix_unitaire", nullable = false)
     private double prixUnitaire;
 
-    @Column(name = "total_ligne")
+    @Column(name = "total_ligne", nullable = false)
     private double totalLigne;
 
 }

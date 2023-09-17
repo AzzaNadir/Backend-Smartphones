@@ -26,13 +26,13 @@ public class Commande {
     @OneToMany(mappedBy = "commande", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<LigneCommande> lignesCommande = new ArrayList<>();
 
-    @Column(name = "dateTime_commande")
+    @Column(name = "dateTime_commande", nullable = false)
     private LocalDateTime dateTimeCommande;
 
-    @Column(name = "commande_status")
+    @Column(name = "commande_status", nullable = false)
     private String commandeStatus;
 
     @OneToOne(mappedBy = "commande", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Order orders ;
+    private PaypalOrder orders;
 
 }

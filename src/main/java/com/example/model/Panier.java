@@ -19,6 +19,7 @@ public class Panier {
 
     @OneToMany(mappedBy = "panier", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<LignePanier> lignesPanier = new ArrayList<>();
+    @Column(name = "prixTotalPanier")
     private double prixTotalPanier;
 
     public Long getId() {

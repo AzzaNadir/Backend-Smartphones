@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 @Table(name = "paypal_orders")
 @Data
 @Component
-public class Order {
+public class PaypalOrder {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;

@@ -25,34 +25,34 @@ public class Utilisateur {
 
     @NotBlank
     @Size(max = 50)
-    @Column(name = "nom_utilisateur")
+    @Column(name = "nom_utilisateur", nullable = false)
     private String nom;
 
     @NotBlank
     @Size(max = 50)
-    @Column(name = "prenom_utilisateur")
+    @Column(name = "prenom_utilisateur", nullable = false)
     private String prenom;
 
     @NotBlank
     @Email
     @Size(max = 50)
-    @Column(name = "email_utilisateur")
+    @Column(name = "email_utilisateur", nullable = false)
     private String email;
 
     @NotBlank
-    @Column(name = "mot_de_passe_utilisateur")
+    @Column(name = "mot_de_passe_utilisateur", nullable = false)
     private String motDePasse;
     @NotBlank
-    @Column(name = "numero_telephone_utilisateur")
+    @Column(name = "numero_telephone_utilisateur", nullable = false)
     private String numeroDeTelephone;
     @NotBlank
     @Size(max = 100)
-    @Column(name = "adresse_utilisateur")
+    @Column(name = "adresse_utilisateur", nullable = false)
     private String adresse;
 
     @NotNull
     @Enumerated(EnumType.STRING)
-    @Column(name = "type_utilisateur")
+    @Column(name = "type_utilisateur", nullable = false)
     private TypeUtilisateur type;
 
     @OneToOne(mappedBy = "utilisateur")

@@ -1,19 +1,16 @@
 package com.example.controller;
 
-import com.example.service.JwtTokenUtil;
 import com.example.model.*;
 import com.example.repository.OrderDAO;
 import com.example.repository.ProduitRepository;
-import com.example.service.CommandeService;
-import com.example.service.PanierService;
-import com.example.service.PayPalHttpClient;
-import com.example.service.UtilisateurService;
+import com.example.service.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import javax.mail.MessagingException;
@@ -42,7 +39,7 @@ public class CheckoutController {
     @Autowired
     private UtilisateurService utilisateurService;
     @Autowired
-    private Order order;
+    private PaypalOrder order;
     @Autowired
     private JavaMailSender mailSender;
 
@@ -55,7 +52,7 @@ public class CheckoutController {
         this.payPalHttpClient = payPalHttpClient;
     }
 
-
+    @Transactional
     @PostMapping
     public ResponseEntity<OrderResponseDTO> checkout(@RequestBody OrderDTO orderDTO, HttpServletRequest request) throws Exception {
         String token = request.getHeader("Authorization");
@@ -84,7 +81,7 @@ public class CheckoutController {
             totalAmount = totalAmount.add(purchaseAmount); // Accumuler le montant total
         }
 
-        var entity = new Order();
+        var entity = new PaypalOrder();
         entity.setPaypalOrderId(orderResponse.getId());
         entity.setPaypalOrderStatus(orderResponse.getStatus().toString());
         entity.setAmount(totalAmount);
@@ -93,7 +90,7 @@ public class CheckoutController {
         return ResponseEntity.ok(orderResponse);
     }
 
-
+    @Transactional
     @GetMapping(value = "/success")
     public ResponseEntity<String> paymentSuccess(HttpServletRequest request, @RequestParam("utilisateur") String emailUtilisateur) {
         var orderId = request.getParameter("token");
@@ -116,7 +113,7 @@ public class CheckoutController {
                 int stockDisponible = produitRepository.getQuantiteStockById(produit.getId());
                 System.out.println("STOCK DISPONIBLE" + stockDisponible);
                 if (stockDisponible < lignePanier.getQuantite()) {
-                    return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("L'article " + produit.getNom() + " n'est plus en stock.");
+                    return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Article(s) en rupture de stock.");
                 }
             }
 
@@ -166,7 +163,7 @@ public class CheckoutController {
     private String generateEmailContent(Commande commande, Utilisateur utilisateur) {
         BigDecimal totalAmountWithTax = BigDecimal.ZERO;
         String statusPayment = "";
-        Order orders = orderDAO.findByCommande(commande);
+        PaypalOrder orders = orderDAO.findByCommande(commande);
         totalAmountWithTax = orders.getAmount();
         statusPayment = orders.getPaypalOrderStatus();
 
