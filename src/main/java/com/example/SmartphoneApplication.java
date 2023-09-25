@@ -7,9 +7,6 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-// remplace les 3 annotations @Configuration @EnableAutoConfiguration @ComponentScan
-// met la "fabrique" en route
-
 public class SmartphoneApplication implements CommandLineRunner {
 
 	@Autowired

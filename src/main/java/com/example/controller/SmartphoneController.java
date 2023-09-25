@@ -42,8 +42,7 @@ public class SmartphoneController {
 
         List<Produit> existingSmartphones = smartphoneService.rechercherSmartphonesParCritere(marque, modele, couleur, stockage);
         if (!existingSmartphones.isEmpty()) {
-            // Un smartphone avec les mêmes attributs existe déjà, renvoyer une réponse d'erreur appropriée
-            return new ResponseEntity<>(HttpStatus.CONFLICT); // HTTP 409 - Conflict
+            return new ResponseEntity<>(HttpStatus.CONFLICT);
         }
 
         Smartphone smartphone = new Smartphone(nom, description, prix, quantiteStock, image, modele, MarqueSmartphone.valueOf(marque.toUpperCase()), Couleur.valueOf(couleur.toUpperCase()), stockage, memoireRam, tailleEcran);
@@ -76,7 +75,6 @@ public class SmartphoneController {
             smartphone.setMemoireRam(request.getParameter("memoireRam"));
             smartphone.setTailleEcran(Double.parseDouble(request.getParameter("tailleEcran")));
 
-            // Extraction de l'image du formulaire
             MultipartFile file = request.getFile("image");
             if (file != null && !file.isEmpty()) {
                 byte[] bytes = file.getBytes();
@@ -126,7 +124,6 @@ public class SmartphoneController {
             AvailableOptions options = new AvailableOptions(availableColors, availableStorages);
             return new ResponseEntity<>(options, HttpStatus.OK);
         } else {
-            // Le produit trouvé n'est pas un smartphone
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }

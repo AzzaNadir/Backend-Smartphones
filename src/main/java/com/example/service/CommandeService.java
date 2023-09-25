@@ -11,12 +11,9 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
-
 public class CommandeService {
     @Autowired
     private CommandeRepository commandeRepository;
-    @Autowired
-    private PaypalOrder order;
     @Autowired
     ProduitRepository produitRepository;
 
@@ -27,7 +24,6 @@ public class CommandeService {
         commande.setUtilisateur(utilisateur);
         commande.setDateTimeCommande(LocalDateTime.now());
         commande.setCommandeStatus("En cours de livraison");
-        // Créer et associer les lignes de commande à la commande.
         for (LignePanier lignePanier : panier.getLignesPanier()) {
             LigneCommande ligneCommande = new LigneCommande();
             ligneCommande.setCommande(commande);
@@ -36,7 +32,6 @@ public class CommandeService {
             ligneCommande.setPrixUnitaire(lignePanier.getPrixUnitaire());
             ligneCommande.setTotalLigne(lignePanier.getPrixTotal());
             commande.getLignesCommande().add(ligneCommande);
-            // Mise à jour du stock du produit en fonction de la quantité commandée.
             Produit produit = lignePanier.getProduit();
             int nouvelleQuantiteStock = produit.getQuantiteStock() - lignePanier.getQuantite();
 

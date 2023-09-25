@@ -39,8 +39,6 @@ public class CheckoutController {
     @Autowired
     private UtilisateurService utilisateurService;
     @Autowired
-    private PaypalOrder order;
-    @Autowired
     private JavaMailSender mailSender;
 
     @Autowired
@@ -58,13 +56,11 @@ public class CheckoutController {
         String token = request.getHeader("Authorization");
         String emailUtilisateur = jwtTokenUtil.getUsernameFromToken(token.substring(7));
 
-        // Ensuite, utilisez le service ou le référentiel pour trouver l'utilisateur par adresse e-mail
         Utilisateur utilisateur = utilisateurService.getUtilisateurParEmail(emailUtilisateur);
         if (utilisateur == null) {
             return ResponseEntity.notFound().build();
         }
 
-        // Associer l'utilisateur à la commande
         var appContext = new PayPalAppContextDTO();
         appContext.setReturnUrl("http://localhost:8080/checkout/success?utilisateur=" + emailUtilisateur);
         appContext.setBrandName("My brand");
@@ -95,7 +91,6 @@ public class CheckoutController {
     public ResponseEntity<String> paymentSuccess(HttpServletRequest request, @RequestParam("utilisateur") String emailUtilisateur) {
         var orderId = request.getParameter("token");
 
-        // Déclencher le processus de capture du paiement.
         try {
             Utilisateur utilisateur = utilisateurService.getUtilisateurParEmail(emailUtilisateur);
             Panier panier = utilisateur.getPanier();
@@ -109,7 +104,6 @@ public class CheckoutController {
             for (LignePanier lignePanier : lignesPanier) {
                 Produit produit = lignePanier.getProduit();
 
-                // Vérifier si le produit est encore en stock en interrogeant la base de données
                 int stockDisponible = produitRepository.getQuantiteStockById(produit.getId());
                 System.out.println("STOCK DISPONIBLE" + stockDisponible);
                 if (stockDisponible < lignePanier.getQuantite()) {
@@ -147,16 +141,13 @@ public class CheckoutController {
 
         message.setFrom("azna2603@student.iepscf-uccle.be");
 
-        // Configurez l'objet, le destinataire, etc.
         helper.setSubject("Confirmation de commande");
         helper.setTo(recipientEmail);
 
-        // Créez le contenu de l'e-mail en HTML.
         String emailContent = generateEmailContent(commande, utilisateur);
 
         helper.setText(emailContent, true);
 
-        // Envoyez l'e-mail.
         mailSender.send(message);
     }
 
@@ -172,7 +163,6 @@ public class CheckoutController {
         }
 
 
-        // Calculer la TVA en supposant un taux de TVA de 20% (à adapter selon votre taux réel).
         BigDecimal taxRate = new BigDecimal("0.21"); // Exemple pour 20% de TVA
         BigDecimal taxAmount = totalAmountWithTax.multiply(taxRate);
 
@@ -188,13 +178,11 @@ public class CheckoutController {
                 .append("<p>Sous-total : " + decimalFormat.format(totalAmount) + " €</p>")
                 .append("<p>TVA : " + decimalFormat.format(taxAmount) + " €</p>")
                 .append("<p>Total : " + decimalFormat.format(totalAmountWithTax) + " €</p>");
-        // Ajouter les informations de l'utilisateur
         emailContentBuilder.append("<h3>Informations de livraison :</h3>")
                 .append("<p>Nom : " + utilisateur.getNom() + "</p>")
                 .append("<p>Prénom : " + utilisateur.getPrenom() + "</p>")
                 .append("<p>Adresse de livraison : " + utilisateur.getAdresse() + "</p>")
                 .append("<p>Numéro de téléphone : " + utilisateur.getNumeroDeTelephone() + "</p>");
-        // Ajouter les détails de la commande et les lignes de commande
         emailContentBuilder.append("<h3>Détails de la commande :</h3>")
                 .append("<p>Date de commande : " + commande.getDateTimeCommande().format(dateTimeFormatter) + "</p>")
                 .append("<p>Statut de la commande : " + commande.getCommandeStatus() + "</p>")
@@ -211,7 +199,6 @@ public class CheckoutController {
                         .append("<li>Prix unitaire : " + ligneCommande.getPrixUnitaire() + " € TVAC</li>")
                         .append("<li>Total : " + ligneCommande.getTotalLigne() + " € TVAC</li><br>");
             } else {
-                // Ajouter des informations pour d'autres types de produits si nécessaire
             }
         }
         emailContentBuilder.append("</ul></body></html>");

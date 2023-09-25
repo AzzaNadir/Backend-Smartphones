@@ -20,7 +20,6 @@ public class PasswordResetToken {
     private LocalDateTime expiryDateTime;
 
     public PasswordResetToken() {
-        // Constructeur par défaut requis par JPA
     }
 
     public PasswordResetToken(String token, Utilisateur utilisateur, int expirationTimeInMinutes) {

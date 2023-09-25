@@ -40,16 +40,13 @@ public class UtilisateurService {
     }
 
     public void registerUser(Utilisateur user) {
-        // Vérifier si l'utilisateur existe déjà dans la base de données
         if (utilisateurRepository.findByEmail(user.getEmail()) != null) {
             throw new RuntimeException("Email déjà utilisé");
         }
 
-        // Crypter le mot de passe avant de le stocker dans la base de données
         String hashedPassword = BCrypt.hashpw(user.getMotDePasse(), BCrypt.gensalt());
         user.setMotDePasse(hashedPassword);
 
-        // Enregistrer l'utilisateur dans la base de données
         utilisateurRepository.save(user);
     }
 
@@ -75,7 +72,6 @@ public class UtilisateurService {
         String token = request.getHeader("Authorization");
         String emailUtilisateur = jwtTokenUtil.getUsernameFromToken(token.substring(7));
 
-        // Ensuite, utilisez le service ou le référentiel pour trouver l'utilisateur par adresse e-mail
         Utilisateur utilisateur = getUtilisateurParEmail(emailUtilisateur);
         if (utilisateur == null) {
             throw new RuntimeException("L'utilisateur n'existe pas !");

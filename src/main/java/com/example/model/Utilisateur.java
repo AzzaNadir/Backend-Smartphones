@@ -14,8 +14,6 @@ import java.util.List;
 @Entity
 @Table(name = "utilisateur")
 @Component
-//@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
-
 public class Utilisateur {
 
     @Id

@@ -43,7 +43,6 @@ public class PasswordResetController {
         PasswordResetToken passwordResetToken = new PasswordResetToken(token, utilisateur, 10);
         passwordResetTokenService.save(passwordResetToken);
 
-        // Envoie l'e-mail contenant le lien de réinitialisation vers la boîte mail de l'utilisateur
         sendResetPasswordEmail(userEmail, token);
 
         return ResponseEntity.ok("Un e-mail de réinitialisation de mot de passe a été envoyé.");
@@ -59,40 +58,22 @@ public class PasswordResetController {
         }
 
         Utilisateur utilisateur = passwordResetToken.getUtilisateur();
-        // Mettez en œuvre la logique pour mettre à jour le mot de passe dans votre base de données
-        // Assurez-vous d'encoder le mot de passe avant de le stocker dans la base de données pour des raisons de sécurité.
 
-        // Exemple :
         utilisateur.setMotDePasse(passwordEncoder.encode(newPassword));
         utilisateurRepository.save(utilisateur);
 
-        // Supprimer le token de réinitialisation car il n'est plus nécessaire après la réinitialisation du mot de passe
         passwordResetTokenService.delete(passwordResetToken);
 
         return ResponseEntity.ok("Le mot de passe a été réinitialisé avec succès.");
     }
 
-    // Méthode pour envoyer l'e-mail de réinitialisation de mot de passe
     private void sendResetPasswordEmail(String userEmail, String token) {
-        // Créez un objet SimpleMailMessage pour configurer l'e-mail
         SimpleMailMessage message = new SimpleMailMessage();
-
-        // Définir l'expéditeur de l'e-mail
         message.setFrom("azna2603@student.iepscf-uccle.be");
-
-        // Définir le destinataire de l'e-mail
         message.setTo(userEmail);
-
-        // Définir le sujet de l'e-mail
         message.setSubject("Réinitialisation de mot de passe");
-
-        // Construire le lien de réinitialisation avec le token
         String resetLink = "http://localhost:3000/ResetPasswordPage?token=" + token;
-
-        // Définir le corps de l'e-mail
         message.setText("Cliquez sur le lien suivant pour réinitialiser votre mot de passe : " + resetLink);
-
-        // Envoyer l'e-mail
         mailSender.send(message);
     }
 

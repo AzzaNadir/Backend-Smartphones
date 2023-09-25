@@ -11,7 +11,5 @@ public interface UtilisateurRepository extends JpaRepository<Utilisateur, Long> 
 
     Utilisateur findByType(TypeUtilisateur administrateur);
 
-    Utilisateur findByNom(String username);
-
 
 }

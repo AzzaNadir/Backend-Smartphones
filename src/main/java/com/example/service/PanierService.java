@@ -21,10 +21,8 @@ public class PanierService {
             utilisateur.setPanier(panier);
         }
 
-        // Vérifier si le produit avec le même ID existe déjà dans le panier
         for (LignePanier lignePanier : panier.getLignesPanier()) {
             if (lignePanier.getProduit().getId().equals(produit.getId())) {
-                // Le produit existe déjà dans le panier, lancez une exception
                 throw new IllegalArgumentException("Le produit est déjà dans le panier !");
             }
         }
@@ -33,8 +31,7 @@ public class PanierService {
         nouvelleLigne.setProduit(produit);
         nouvelleLigne.setQuantite(quantite);
 
-        // Calculer le prix unitaire et le prix total pour cette ligne
-        double prixUnitaire = produit.getPrix(); // Vous pouvez obtenir le prix du produit à partir de son entité
+        double prixUnitaire = produit.getPrix();
         double prixTotal = prixUnitaire * quantite;
         nouvelleLigne.setPrixUnitaire(prixUnitaire);
         nouvelleLigne.setPrixTotal(prixTotal);
@@ -42,7 +39,6 @@ public class PanierService {
         panier.ajouterLignePanier(nouvelleLigne);
         miseAJourPrixTotalPanier(panier);
 
-        // Enregistrez le panier uniquement, pas besoin de sauvegarder l'utilisateur ici
         panierRepository.save(panier);
     }
 
@@ -63,6 +59,7 @@ public class PanierService {
         panier.setPrixTotalPanier(0.0);
         panierRepository.save(panier);
     }
+
     public void enregistrerPanier(Panier panier) {
         panierRepository.save(panier);
     }

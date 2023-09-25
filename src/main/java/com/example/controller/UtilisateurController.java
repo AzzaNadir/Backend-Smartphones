@@ -1,6 +1,5 @@
 package com.example.controller;
 
-import com.example.service.JwtTokenUtil;
 import com.example.model.ChangerMotDePasseRequest;
 import com.example.model.TypeUtilisateur;
 import com.example.model.Utilisateur;
@@ -12,6 +11,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
+
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -23,8 +23,6 @@ public class UtilisateurController {
 
     @Autowired
     private UtilisateurService utilisateurService;
-    @Autowired
-    private JwtTokenUtil jwtTokenUtil;
 
     @PostMapping("/register")
     public ResponseEntity<String> registerUser(@RequestBody Utilisateur user) {
@@ -37,6 +35,7 @@ public class UtilisateurController {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
+
     @GetMapping("/GetUtilisateur")
     public ResponseEntity<Utilisateur> getProfilUtilisateur(HttpServletRequest request) {
         Utilisateur utilisateur = utilisateurService.getUtilisateurFromToken(request);
@@ -46,7 +45,7 @@ public class UtilisateurController {
 
     @PutMapping("/UpdateProfile")
     public ResponseEntity<String> modifierProfil(HttpServletRequest request, @RequestBody Utilisateur utilisateurModifie) {
-       Utilisateur utilisateur = utilisateurService.getUtilisateurFromToken(request);
+        Utilisateur utilisateur = utilisateurService.getUtilisateurFromToken(request);
 
         utilisateur.setNom(utilisateurModifie.getNom());
         utilisateur.setPrenom(utilisateurModifie.getPrenom());
@@ -62,19 +61,18 @@ public class UtilisateurController {
     public ResponseEntity<String> changerMotDePasse(HttpServletRequest request, @RequestBody ChangerMotDePasseRequest requestBody) {
         Utilisateur utilisateur = utilisateurService.getUtilisateurFromToken(request);
 
-        // Vérifiez le mot de passe actuel à l'aide de l'PasswordEncoder
         PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(); // Utilisez l'implémentation de votre choix
         if (!passwordEncoder.matches(requestBody.getAncienMotDePasse(), utilisateur.getMotDePasse())) {
             return ResponseEntity.badRequest().body("Le mot de passe actuel est incorrect");
         }
 
-        // Générez le hachage sécurisé pour le nouveau mot de passe
         String nouveauMotDePasseHash = passwordEncoder.encode(requestBody.getNouveauMotDePasse());
         utilisateur.setMotDePasse(nouveauMotDePasseHash);
         utilisateurService.enregistrerUtilisateur(utilisateur);
 
         return ResponseEntity.ok("Mot de passe modifié avec succès");
     }
+
     @GetMapping("/permission")
     public List<String> getPermissions(Authentication authentication) {
         return authentication.getAuthorities().stream()

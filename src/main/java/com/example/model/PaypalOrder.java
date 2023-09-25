@@ -26,6 +26,6 @@ public class PaypalOrder {
     private BigDecimal amount;
     @JsonIgnore
     @OneToOne
-    @JoinColumn(name = "commande_id") // Clé étrangère vers la commande associée
-    private Commande commande; // Ajoutez cette référence à la commande
+    @JoinColumn(name = "commande_id")
+    private Commande commande;
 }
